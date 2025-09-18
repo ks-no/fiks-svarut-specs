@@ -32,7 +32,7 @@
         "tags": [
           "Send"
         ],
-        "description": "Sender forsendelse til person fra oppgitt konto",
+        "summary": "Sender forsendelse til person fra oppgitt konto",
         "operationId": "sendTilPerson",
         "parameters": [
           {
@@ -96,7 +96,7 @@
         "tags": [
           "Send"
         ],
-        "description": "Sender forsendelse til organisasjon fra oppgitt konto",
+        "summary": "Sender forsendelse til organisasjon fra oppgitt konto",
         "operationId": "sendTilOrganisasjon",
         "parameters": [
           {
@@ -160,7 +160,7 @@
         "tags": [
           "Send"
         ],
-        "description": "Sender forsendelse til mottaker i Norsk Helsenett fra oppgitt konto",
+        "summary": "Sender forsendelse til mottaker i Norsk Helsenett fra oppgitt konto",
         "operationId": "sendTilNhn",
         "parameters": [
           {
