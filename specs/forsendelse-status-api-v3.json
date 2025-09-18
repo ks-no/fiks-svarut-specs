@@ -8,8 +8,17 @@
       "url" : "https://ks-no.github.io/",
       "email" : "fiks-utvikling@ks.no"
     },
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    },
     "version" : "v3"
   },
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
   "servers" : [ {
     "url" : "https://test.svarut.ks.no/api",
     "description" : "SvarUt testmiljø"
@@ -25,7 +34,7 @@
     "/v3/kontoer/{kontoId}/forsendelser/status" : {
       "post" : {
         "tags" : [ "Status" ],
-        "description" : "Henter status for forsendelse",
+        "summary" : "Henter status for forsendelse",
         "operationId" : "hentStatuser",
         "parameters" : [ {
           "name" : "kontoId",
@@ -72,6 +81,13 @@
     }
   },
   "components" : {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
     "schemas" : {
       "Forsendelser": {
         "required" : [ "id" ],
