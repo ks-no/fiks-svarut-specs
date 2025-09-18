@@ -8,8 +8,17 @@
       "url": "https://ks-no.github.io/",
       "email": "fiks-utvikling@ks.no"
     },
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    },
     "version": "v3"
   },
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
   "servers": [
     {
       "url": "https://test.svarut.ks.no/api",
