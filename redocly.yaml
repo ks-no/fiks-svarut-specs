@@ -1,0 +1,7 @@
+extends:
+  - recommended
+apis:
+  forsendelse-send-api@v3:
+    root: ./specs/forsendelse-send-api-v3.json
+  forsendelse-status-api@v3:
+    root: ./specs/forsendelse-status-api-v3.json
