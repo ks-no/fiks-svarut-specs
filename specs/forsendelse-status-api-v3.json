@@ -31,7 +31,7 @@
     "description" : "API for henting av status for forsendelser"
   } ],
   "paths" : {
-    "/v3/kontoer/{kontoId}/forsendelser/status" : {
+    "/v3/kontoer/{kontoId}/forsendelser/status/sok" : {
       "post" : {
         "tags" : [ "Status" ],
         "summary" : "Henter status for en liste med forsendelser",
