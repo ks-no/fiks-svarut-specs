@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "KS SvarUt: Send forsendelse-API - UNDER UTVIKLING, det vil fortsatt komme endringer",
+    "title": "KS SvarUt: Send forsendelse API - UNDER UTVIKLING, det vil fortsatt komme endringer",
     "description": "API for sending av forsendelser - UNDER UTVIKLING, det vil fortsatt komme endringer",
     "contact": {
       "name": "Fiks-brukerstøtte",
@@ -31,7 +31,7 @@
   ],
   "tags": [
     {
-      "name": "Send",
+      "name": "SendForsendelse",
       "description": "API for sending av forsendelser"
     }
   ],
@@ -39,7 +39,7 @@
     "/v3/kontoer/{kontoId}/forsendelser/person": {
       "post": {
         "tags": [
-          "Send"
+          "SendForsendelse"
         ],
         "summary": "Sender forsendelse til person fra oppgitt konto",
         "operationId": "sendTilPerson",
@@ -103,7 +103,7 @@
     "/v3/kontoer/{kontoId}/forsendelser/organisasjon": {
       "post": {
         "tags": [
-          "Send"
+          "SendForsendelse"
         ],
         "summary": "Sender forsendelse til organisasjon fra oppgitt konto",
         "operationId": "sendTilOrganisasjon",
@@ -167,7 +167,7 @@
     "/v3/kontoer/{kontoId}/forsendelser/nhn": {
       "post": {
         "tags": [
-          "Send"
+          "SendForsendelse"
         ],
         "summary": "Sender forsendelse til mottaker i Norsk Helsenett fra oppgitt konto",
         "operationId": "sendTilNhn",
@@ -224,6 +224,70 @@
           }
         }
       }
+    },
+    "/v3/kontoer/{kontoId}/forsendelser/print": {
+      "post": {
+        "tags": [
+          "SendForsendelse"
+        ],
+        "summary": "Sender forsendelse som skal printes og sendes i posten fra oppgitt konto. Denne skal kun brukes for forsendelser som ikke kan sendes digitalt.",
+        "operationId": "sendTilPrint",
+        "parameters": [
+          {
+            "name": "kontoId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "forsendelse": {
+                    "$ref": "#/components/schemas/PrintForsendelse"
+                  },
+                  "dokumenter": {
+                    "type": "array",
+                    "description": "Forsendelsens dokumenter. Multipart 'name' ignoreres, og trenger derfor ikke å være 'dokumenter'. Må ha samme rekkefølge som dokument-metadata, dette valideres via filename på part.",
+                    "items": {
+                      "type": "string",
+                      "format": "binary"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ForsendelseId",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SendForsendelseResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Feil",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -237,23 +301,27 @@
     "schemas": {
       "Mottaker": {
         "required": [
-          "navn"
+          "navn", "digitalId"
         ],
         "type": "object",
         "properties": {
           "navn": {
             "type": "string",
+            "minLength": 1,
+            "maxLength": 100,
             "description": "Navn på person eller organisasjon."
           },
           "digitalId": {
             "type": "string",
-            "description": "Nødvendig for å sende forsendelsen digitalt. Påkrevd for mottaker ved kun digital levering. For person må det vere et gyldig fødsels- eller d-nummer, for organisasjon må det vere et gyldig organisasjonsnummer som finnes i Enhetsregisteret."
+            "minLength": 9,
+            "maxLength": 11,
+            "description": "Nødvendig for å sende forsendelsen digitalt. For person må det være et gyldig fødsels- eller d-nummer, for organisasjon må det være et gyldig organisasjonsnummer som finnes i Enhetsregisteret."
           },
           "adresse": {
             "$ref": "#/components/schemas/Adresse"
           }
         },
-        "description": "Mottaker som skal motta forsendelsen. Krever fødselsnummer eller organisasjonsnummer for digital levering, og postadresse for å sikre levering via post."
+        "description": "Mottaker som skal motta forsendelsen. Krever fødselsnummer eller organisasjonsnummer og navn, for å sikre levering via post må også postadresse vere med."
       },
       "SvarSendesTil": {
         "required": [
@@ -263,39 +331,54 @@
         "properties": {
           "navn": {
             "type": "string",
+            "minLength": 1,
+            "maxLength": 100,
             "description": "Navn på organisasjon eller person som svaret skal sendes til."
           },
           "digitalId": {
             "type": "string",
+            "minLength": 9,
+            "maxLength": 11,
             "description": "Et gyldig organisasjonsnummer eller fødselsnummer som svar skal sendes til. Nødvendig for å sende forsendelsen digitalt. Må være et organisasjonsnummer om svarPaForsendelse-feltet på forsendelse er satt til true. "
           },
           "adresse": {
             "$ref": "#/components/schemas/Adresse"
           }
         },
-        "description": "Dette er returadressen det skal sendes til dersom man ønsker å svare på forsendelsen.\nEn eventuell adresse som fylles inn her vil overstyre adressen fra avsenderens forsidekonfigurasjon. Den vil også fremkomme på forsiden av brevet dersom forsendelsen sendes i posten."
+        "description": "Dette er returadressen det skal sendes til dersom man ønsker å svare på forsendelsen.\nDenne vil overstyre adressen fra avsenderens forsidekonfigurasjon. Dersom forsendelsen sendes i posten, vil den stå som avsenderadresse på forsiden av brevet."
       },
       "Adresse": {
         "type": "object",
+        "required": ["adresselinje1", "poststed"],
         "properties": {
           "adresselinje1": {
             "type": "string",
+            "minLength": 1,
+            "maxLength": 70,
             "description": "Første adresselinje"
           },
           "adresselinje2": {
             "type": "string",
+            "minLength": 1,
+            "maxLength": 70,
             "description": "Andre adresselinje"
           },
           "adresselinje3": {
             "type": "string",
+            "minLength": 1,
+            "maxLength": 70,
             "description": "Tredje adresselinje"
           },
           "poststed": {
             "type": "string",
+            "minLength": 1,
+            "maxLength": 70,
             "description": "Poststed."
           },
           "postnummer": {
             "type": "string",
+            "minLength": 1,
+            "maxLength": 70,
             "description": "Postnummer."
           },
           "landkode": {
@@ -308,6 +391,24 @@
         },
         "description": "Adresse for å sikre levering av forsendelse via post."
       },
+      "Postadresse": {
+        "required": [
+          "navn", "adresse"
+        ],
+        "type": "object",
+        "properties": {
+          "navn": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100,
+            "description": "Navn på mottaker."
+          },
+          "adresse": {
+            "$ref": "#/components/schemas/Adresse"
+          }
+        },
+        "description": "Postadresse til mottaker. Krever navn og adresse."
+      },
       "PersonForsendelse": {
         "description": "Metadata for forsendelsen og tilhørende dokumenter til person.",
         "required": [
@@ -317,9 +418,10 @@
         "type": "object",
         "properties": {
           "tittel": {
+            "minLength": 1,
             "maxLength": 1000,
             "type": "string",
-            "description": "Tittel på forsendelsen. Tittel blir vist i tittelfeltet på melding i digitale postkasser, og i listen over innkommende meldinger."
+            "description": "Tittel på forsendelsen. Tittel blir vist i tittelfeltet på melding i digitale postkasser."
           },
           "mottaker": {
             "$ref": "#/components/schemas/Mottaker"
@@ -327,30 +429,34 @@
           "eksponertFor": {
             "uniqueItems": true,
             "type": "array",
-            "description": "Liste med fødselsnummer og organisasjonsnummer som skal få tilgang til å laste ned forsendelsens dokumenter.",
+            "description": "Liste med fødselsnummer og/eller organisasjonsnummer som skal få tilgang til forsendelsens dokumenter.",
             "items": {
               "type": "string",
-              "description": "Fødselsnummer eller organisasjonsnummer som skal få tilgang til å laste ned forsendelsens dokumenter."
+              "description": "Fødselsnummer eller organisasjonsnummer som skal få tilgang til forsendelsens dokumenter."
             }
           },
           "avgivendeSystem": {
+            "minLength": 1,
             "maxLength": 100,
             "type": "string",
             "description": "Identifiserer systemet som sender forsendelsen. Kan blant annet benyttes for statistikk og feilsøking."
           },
           "avgivendeSystemAktor": {
             "type": "string",
-            "description": "Aktør som startet utsending av forsendelsen i avgivende system."
+            "minLength": 1,
+            "maxLength": 100,
+            "description": "Aktør som sendte forsendelsen fra avgivende system."
           },
           "konteringskode": {
+            "minLength": 1,
             "maxLength": 20,
             "pattern": "^[a-zA-Z0-9_\\-.øæåØÆÅ]{0,20}$",
             "type": "string",
-            "description": "Kode som beskriver faktureringskonto for forsendelsen. Kan benyttes for å gruppere meldingsstatistikk gjennom forvaltningsløsningen, og sendes videre til print-leverandør."
+            "description": "Kode som beskriver faktureringskonto for forsendelsen. Kan benyttes for å gruppere meldingsstatistikk."
           },
           "kunDigitalLevering": {
             "type": "boolean",
-            "description": "Dersom denne settes til true vil forsendelsen ikke under noen omstendigheter bli printet. INGEN GARANTI OM LEVERANSE. Dersom vi ikke klarer å levere via noen digitale kanaler får avsender ingen tilbakemelding.",
+            "description": "INGEN GARANTI OM LEVERANSE. Dersom denne settes til true vil forsendelsen aldri bli printet. Dersom vi ikke klarer å levere via noen digitale kanaler får avsender ingen tilbakemelding.",
             "default": false
           },
           "kryptert": {
@@ -369,12 +475,12 @@
           },
           "svarPaForsendelseId": {
             "type": "string",
-            "description": "Id til forsendelse dette er et svar på.",
+            "description": "Id til forsendelsen dette er et svar på.",
             "format": "uuid"
           },
           "dokumenter": {
             "type": "array",
-            "description": "Forsendelsens dokumenter. Innsendt rekkefølge overholdes i generert brev. Total filstørrelse inntil 350 MB er støttet dersom forsendelsen skal kunne gå til print.",
+            "description": "Forsendelsens dokumenter. Innsendt rekkefølge overholdes i generert brev. Total filstørrelse på inntil 350 MB er støttet dersom forsendelsen skal kunne gå til print.",
             "items": {
               "required": [
                 "filnavn",
@@ -383,12 +489,15 @@
               "type": "object",
               "properties": {
                 "filnavn": {
+                  "minLength": 1,
                   "maxLength": 226,
                   "type": "string",
                   "description": "Filnavn. Må være unikt for denne forsendelsen. Kan ikke inneholde noen av følgende tegn: * : \" \\ / < > | ?"
                 },
                 "mimeType": {
                   "type": "string",
+                  "minLength": 1,
+                  "maxLength": 50,
                   "description": "MIME type. Kun application/pdf kan printes. Dersom man ønsker å sende andre typer filer må forsendelsen markeres som kun digital, ellers må disse filene markeres som eksludert fra utskrift."
                 },
                 "skalSigneres": {
@@ -413,12 +522,13 @@
           "lenker": {
             "type": "array",
             "maxItems": 5,
-            "description": "Lenker som ved bruk av standardmaler blir sendt med i meldinger til digitale postkasser. Innsendt rekkefølge overholdes.",
+            "description": "Lenker som blir sendt med i meldinger til digitale postkasser dersom meldings-malen er konfigurert til dette. Innsendt rekkefølge overholdes.",
             "items": {
               "$ref": "#/components/schemas/Lenke"
             }
           },
           "eksternReferanse": {
+            "minLength": 1,
             "maxLength": 100,
             "type": "string",
             "description": "Fritekstfelt for ekstern id tilknyttet forsendelsen. Kan benyttes til søk i SvarUt-grensesnittet, samt oppslag via API."
@@ -429,6 +539,7 @@
             "default": false
           },
           "korrelasjonsid": {
+            "minLength": 1,
             "maxLength": 100,
             "type": "string",
             "description": "Fritekstfelt for korrelasjonsid tilknyttet forsendelsen ment for å gruppere flere forsendelser sammen. Kan benyttes til søk i SvarUt-grensesnittet."
@@ -455,6 +566,101 @@
           }
         }
       },
+      "PrintForsendelse": {
+        "description": "Metadata for forsendelsen og tilhørende dokumenter som skal gå rett til print for å sendes via posten. Dette gjelder post til person der man ikke har fødsels- eller d-nummer, eller til organisasjoner der man ikke har organisasjonsnummer tilgjengelig.",
+        "required": [
+          "tittel",
+          "postadresse"
+        ],
+        "type": "object",
+        "properties": {
+          "tittel": {
+            "minLength": 1,
+            "maxLength": 1000,
+            "type": "string",
+            "description": "Tittel på forsendelsen."
+          },
+          "postadresse": {
+            "$ref": "#/components/schemas/Postadresse"
+          },
+          "avgivendeSystem": {
+            "minLength": 1,
+            "maxLength": 100,
+            "type": "string",
+            "description": "Identifiserer systemet som sender forsendelsen. Kan blant annet benyttes for statistikk og feilsøking."
+          },
+          "avgivendeSystemAktor": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100,
+            "description": "Aktør som startet utsending av forsendelsen i avgivende system."
+          },
+          "konteringskode": {
+            "minLength": 1,
+            "maxLength": 20,
+            "pattern": "^[a-zA-Z0-9_\\-.øæåØÆÅ]{0,20}$",
+            "type": "string",
+            "description": "Kode som beskriver faktureringskonto for forsendelsen. Kan benyttes for å gruppere meldingsstatistikk."
+          },
+          "kryptert": {
+            "type": "boolean",
+            "description": "Settes til true dersom filene som sendes er kryptert med CMS ved bruk av SvarUt sin public-key.",
+            "default": false
+          },
+          "utskriftskonfigurasjon": {
+            "$ref": "#/components/schemas/Utskriftskonfigurasjon"
+          },
+          "svarSendesTil": {
+            "$ref": "#/components/schemas/SvarSendesTil"
+          },
+          "svarPaForsendelseId": {
+            "type": "string",
+            "description": "Id til forsendelsen dette er et svar på.",
+            "format": "uuid"
+          },
+          "dokumenter": {
+            "type": "array",
+            "description": "Forsendelsens dokumenter. Innsendt rekkefølge overholdes i generert brev. Total filstørrelse må vere under 350 MB, og alle filer må vere PDF.",
+            "items": {
+              "required": [
+                "filnavn",
+                "mimeType"
+              ],
+              "type": "object",
+              "properties": {
+                "filnavn": {
+                  "minLength": 1,
+                  "maxLength": 226,
+                  "type": "string",
+                  "description": "Filnavn. Må være unikt for denne forsendelsen. Kan ikke inneholde noen av følgende tegn: * : \" \\ / < > | ?"
+                },
+                "mimeType": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 50,
+                  "description": "MIME type. Kun application/pdf godtas."
+                },
+                "giroarkSide": {
+                  "type": "integer",
+                  "format": "int32",
+                  "minimum": 1,
+                  "description": "Sidetall som skal printes på gult giroark. Digital versjon vil få grått giroark. Første side er 1, kan ikke overstige antall sider i PDF."
+                }
+              }
+            }
+          },
+          "eksternReferanse": {
+            "maxLength": 100,
+            "type": "string",
+            "description": "Fritekstfelt for ekstern id tilknyttet forsendelsen. Kan benyttes til søk i SvarUt-grensesnittet, samt oppslag via API."
+          },
+          "korrelasjonsid": {
+            "maxLength": 100,
+            "type": "string",
+            "description": "Fritekstfelt for korrelasjonsid tilknyttet forsendelsen ment for å gruppere flere forsendelser sammen. Kan benyttes til søk i SvarUt-grensesnittet."
+          }
+        }
+      },
       "OrganisasjonForsendelse": {
         "description": "Metadata for forsendelsen og tilhørende dokumenter for forsendelse til en organisasjon.",
         "required": [
@@ -464,9 +670,10 @@
         "type": "object",
         "properties": {
           "tittel": {
+            "minLength": 1,
             "maxLength": 1000,
             "type": "string",
-            "description": "Tittel på forsendelsen. Tittel blir vist i tittelfeltet på melding i digitale postkasser, og i listen over innkommende meldinger."
+            "description": "Tittel på forsendelsen. Tittel blir vist i tittelfeltet på melding i digitale postkasser."
           },
           "mottaker": {
             "$ref": "#/components/schemas/Mottaker"
@@ -481,23 +688,27 @@
             }
           },
           "avgivendeSystem": {
+            "minLength": 1,
             "maxLength": 100,
             "type": "string",
             "description": "Identifiserer systemet som sender forsendelsen. Kan blant annet benyttes for statistikk og feilsøking."
           },
           "avgivendeSystemAktor": {
             "type": "string",
-            "description": "Aktør som startet utsending av forsendelsen i avgivende system."
+            "minLength": 1,
+            "maxLength": 100,
+            "description": "Aktør som sendte forsendelsen fra avgivende system."
           },
           "konteringskode": {
+            "minLength": 1,
             "maxLength": 20,
             "pattern": "^[a-zA-Z0-9_\\-.øæåØÆÅ]{0,20}$",
             "type": "string",
-            "description": "Kode som beskriver faktureringskonto for forsendelsen. Kan benyttes for å gruppere meldingsstatistikk gjennom forvaltningsløsningen, og sendes videre til print-leverandør."
+            "description": "Kode som beskriver faktureringskonto for forsendelsen. Kan benyttes for å gruppere meldingsstatistikk."
           },
           "kunDigitalLevering": {
             "type": "boolean",
-            "description": "Dersom denne settes til true vil forsendelsen ikke under noen omstendigheter bli printet. INGEN GARANTI OM LEVERANSE. Dersom vi ikke klarer å levere via noen digitale kanaler får avsender ingen tilbakemelding.",
+            "description": "INGEN GARANTI OM LEVERANSE. Dersom denne settes til true vil forsendelsen aldri bli printet. Dersom vi ikke klarer å levere via noen digitale kanaler får avsender ingen tilbakemelding.",
             "default": false
           },
           "kryptert": {
@@ -522,7 +733,7 @@
           },
           "svarPaForsendelseId": {
             "type": "string",
-            "description": "Id til forsendelse dette er et svar på.",
+            "description": "Id til forsendelsen dette er et svar på.",
             "format": "uuid"
           },
           "dokumenter": {
@@ -536,12 +747,15 @@
               "type": "object",
               "properties": {
                 "filnavn": {
+                  "minLength": 1,
                   "maxLength": 226,
                   "type": "string",
                   "description": "Filnavn. Må være unikt for denne forsendelsen. Kan ikke inneholde noen av følgende tegn: * : \" \\ / < > | ?"
                 },
                 "mimeType": {
                   "type": "string",
+                  "minLength": 1,
+                  "maxLength": 5,
                   "description": "MIME type. Kun application/pdf kan printes. Dersom man ønsker å sende andre typer filer må forsendelsen markeres som kun digital, ellers må disse filene markeres som eksludert fra utskrift."
                 },
                 "dokumentType": {
@@ -562,14 +776,14 @@
                 "ekstraMetadata": {
                   "uniqueItems": true,
                   "type": "array",
-                  "description": "Kan benyttes til andre data som avsender vil ha med i forsendelsen.",
+                  "description": "Kan benyttes til andre data som avsender vil ha med i forsendelsen.  TODO: IDAR",
                   "items": {
                     "$ref": "#/components/schemas/Metadata"
                   }
                 },
                 "inneholderPersonsensitivInformasjon": {
                   "type": "boolean",
-                  "description": "Brukes for å gjøre mottaker oppmerksom på at dokumentet kan inneholde sensitiv informasjon.",
+                  "description": "Brukes for å gjøre mottaker oppmerksom på at dokumentet kan inneholde sensitiv informasjon. -- TODO: IDAR",
                   "default": false
                 }
               }
@@ -578,22 +792,25 @@
           "lenker": {
             "type": "array",
             "maxItems": 5,
-            "description": "Lenker som, ved bruk av standardmaler, blir sendt med i meldinger til digitale postkasser. Innsendt rekkefølge overholdes.",
+            "description": "Lenker som blir lagt ved meldinger til digitale postkasser om meldingsmal er konfigurert til dette. Innsendt rekkefølge overholdes.",
             "items": {
               "$ref": "#/components/schemas/Lenke"
             }
           },
           "forsendelsestype": {
+            "minLength": 1,
             "maxLength": 100,
             "type": "string",
             "description": "Fritekstfelt for å kunne identifisere forsendelsens type."
           },
           "eksternReferanse": {
+            "minLength": 1,
             "maxLength": 100,
             "type": "string",
             "description": "Fritekstfelt for ekstern id tilknyttet forsendelsen. Kan benyttes til søk i SvarUt-grensesnittet, samt oppslag via API."
           },
           "korrelasjonsid": {
+            "minLength": 1,
             "maxLength": 100,
             "type": "string",
             "description": "Fritekstfelt for korrelasjonsid tilknyttet forsendelsen ment for å gruppere flere forsendelser sammen. Kan benyttes til søk i SvarUt-grensesnittet."
@@ -611,7 +828,7 @@
         }
       },
       "NhnForsendelse": {
-        "description": "Metadata for forsendelsen og tilhørende vedlegg.",
+        "description": "Metadata for forsendelsen og tilhørende vedlegg for en forsendelse som skal sendes til helsepersonell eller helseforetak i Norsk Helsenett.",
         "required": [
           "tittel",
           "mottakerType",
@@ -621,14 +838,16 @@
         "type": "object",
         "properties": {
           "tittel": {
+            "minLength": 1,
             "maxLength": 200,
             "type": "string",
             "description": "Tittel på forsendelsen"
           },
           "beskrivelse": {
+            "minLength": 1,
             "maxLength": 5000,
             "type": "string",
-            "description": "Beskrivelse av innholdet forsendelsen utover det som er oppgitt i tittel."
+            "description": "Beskrivelse av innholdet i forsendelsen utover det som er oppgitt i tittel."
           },
           "mottakerType": {
             "enum": [
@@ -638,6 +857,7 @@
             "description": "Dersom type er FASTLEGE vil forsendelsen sendes til HER-id funnet ved oppslag i fastlegeregisteret på fødselsnummeret oppgitt i pasient-felt. Ved type HER_ID vil forsendelse sendes til oppgitt HER-id."
           },
           "mottakerHerId": {
+            "minimum": 1,
             "type": "integer",
             "format": "int32",
             "description": "HER-id til mottaker. Påkrevd om mottakerType er satt til HER_ID."
@@ -651,19 +871,28 @@
             "type": "object",
             "properties": {
               "fornavn": {
+                "minLength": 1,
+                "maxLength": 30,
                 "type": "string"
               },
               "mellomnavn": {
+                "minLength": 1,
+                "maxLength": 30,
                 "type": "string"
               },
               "etternavn": {
+                "minLength": 1,
+                "maxLength": 30,
                 "type": "string"
               },
               "telefonnummer": {
-                "type": "string"
+                "minLength": 1,
+                "maxLength": 20,
+                "type": "string",
+                "description": "Telefonnummer til kontaktperson hos avsender."
               }
             },
-            "description": "Informasjon om ansvarlig person hos avsender"
+            "description": "Informasjon om kontaktperson hos avsender"
           },
           "pasient": {
             "required": [
@@ -674,47 +903,58 @@
             "type": "object",
             "properties": {
               "fodselsnummer": {
+                "pattern": "^[0-9]{11}$",
                 "type": "string"
               },
               "fornavn": {
+                "minLength": 1,
+                "maxLength": 30,
                 "type": "string"
               },
               "mellomnavn": {
+                "minLength": 1,
+                "maxLength": 30,
                 "type": "string"
               },
               "etternavn": {
+                "minLength": 1,
+                "maxLength": 30,
                 "type": "string"
               }
             },
-            "description": "Informasjon om pasienten forsendelsen gjelder"
+            "description": "Informasjon om pasienten for hvem forsendelsen gjelder"
           },
           "eksponertFor": {
             "uniqueItems": true,
             "type": "array",
-            "description": "Liste med fødselsnummer og organisasjonsnummer som skal få tilgang til å laste ned forsendelsens dokumenter.",
+            "description": "Liste med fødselsnummer og/eller organisasjonsnummer som skal få tilgang til forsendelsens dokumenter.",
             "items": {
               "type": "string",
-              "description": "Liste med fødselsnummer og organisasjonsnummer som skal få tilgang til å laste ned forsendelsens dokumenter."
+              "description": "Liste med fødselsnummer og/eller organisasjonsnummer som skal få tilgang til forsendelsens dokumenter."
             }
           },
           "avgivendeSystem": {
+            "minLength": 1,
             "maxLength": 100,
             "type": "string",
             "description": "Identifiserer systemet som sender forsendelsen. Kan blant annet benyttes for statistikk og feilsøking."
           },
           "avgivendeSystemAktor": {
             "type": "string",
-            "description": "Aktør som startet utsending av forsendelsen i avgivende system."
+            "minLength": 1,
+            "maxLength": 100,
+            "description": "AAktør som sendte forsendelsen fra avgivende system."
           },
           "konteringskode": {
+            "minLength": 1,
             "maxLength": 20,
             "pattern": "^[a-zA-Z0-9_\\-.øæåØÆÅ]{0,20}$",
             "type": "string",
-            "description": "Kode som beskriver faktureringskonto for forsendelsen. Kan benyttes for å gruppere meldingsstatistikk gjennom forvaltningsløsningen, og sendes videre til print-leverandør."
+            "description": "Kode som beskriver faktureringskonto for forsendelsen. Kan benyttes for å gruppere meldingsstatistikk."
           },
           "kunDigitalLevering": {
             "type": "boolean",
-            "description": "Dersom denne settes til true vil forsendelsen ikke under noen omstendigheter bli printet. INGEN GARANTI OM LEVERANSE. Dersom vi ikke klarer å levere via noen digitale kanaler får avsender ingen tilbakemelding.",
+            "description": "INGEN GARANTI OM LEVERANSE. Dersom denne settes til true vil forsendelsen aldri bli printet. Dersom vi ikke klarer å levere via noen digitale kanaler får avsender ingen tilbakemelding.",
             "default": false
           },
           "kryptert": {
@@ -727,15 +967,17 @@
           },
           "svarPaForsendelseId": {
             "type": "string",
-            "description": "Id til forsendelse dette er et svar på.",
+            "description": "Id til forsendelsen dette er et svar på.",
             "format": "uuid"
           },
           "eksternReferanse": {
+            "minLength": 1,
             "maxLength": 100,
             "type": "string",
             "description": "Fritekstfelt for ekstern id tilknyttet forsendelsen. Kan benyttes til søk i SvarUt-grensesnittet, samt oppslag via API."
           },
           "korrelasjonsid": {
+            "minLength": 1,
             "maxLength": 100,
             "type": "string",
             "description": "Fritekstfelt for korrelasjonsid tilknyttet forsendelsen ment for å gruppere flere forsendelser sammen. Kan benyttes til søk i SvarUt-grensesnittet."
@@ -766,7 +1008,7 @@
             "description": "Tekst som kommer før lenken i den digitale meldingen."
           }
         },
-        "description": "Lenker som ved bruk av standardmaler blir sendt med i meldinger til digitale postkasser. Innsendt rekkefølge overholdes."
+        "description": "Lenke som blir sendt med i meldinger til digitale postkasser dersom meldings-malen er konfigurert til dette. Innsendt rekkefølge overholdes."
       },
       "Metadata": {
         "required": [
@@ -791,60 +1033,79 @@
         "properties": {
           "mappeId": {
             "type": "string",
+            "minLength": 1,
+            "maxLength": 100,
             "description": "Entydig identifikasjon av mappen innenfor det arkivet mappen tilhører",
             "example": "fc051651-b853-4b4d-a7cd-fb2beea54356"
           },
           "mappeSystemId": {
             "type": "string",
+            "minLength": 1,
+            "maxLength": 100,
             "description": "Entydig identifikasjon av mappen innenfor det arkivskapende organet",
             "example": "fc051651-b853-4b4d-a7cd-fb2beea54356"
           },
           "saksaar": {
             "type": "integer",
+            "pattern": "^[0-9]{4}$",
+            "minimum": 1900,
             "description": "Viser året saksmappen ble opprettet",
             "format": "int32",
             "example": 2005
           },
           "sakssekvensnummer": {
             "type": "integer",
+            "minimum": 1,
             "description": "Viser rekkefølgen når saksmappen ble opprettet innenfor året",
             "format": "int64",
             "example": 648677
           },
           "systemId": {
             "type": "string",
+            "minLength": 1,
+            "maxLength": 100,
             "description": "Entydig identifikasjon av journalposten innenfor det arkivskapende organet",
             "example": "7044a03d-c459-4cbe-a4c3-371cc6751215"
           },
           "registreringsId": {
             "type": "string",
+            "minLength": 1,
+            "maxLength": 100,
             "description": "Entydig identifikasjon av registreringen innenfor arkivet",
             "example": "5f9e9bc8-ffc1-40c0-8fdd-3b5ee32a2e43"
           },
           "journalpostnummer": {
             "type": "integer",
+            "minimum": 1,
             "description": "Viser rekkefølgen på journalpostene innenfor saksmappen",
             "format": "int64",
             "example": 17
           },
           "journalaar": {
             "type": "integer",
+            "pattern": "^[0-9]{4}$",
+            "minimum": 1900,
             "description": "Viser året journalposten ble opprettet",
             "format": "int32",
             "example": 2024
           },
           "journalsekvensnummer": {
             "type": "integer",
+            "minimum": 1,
             "description": "Viser rekkefølgen når journalposten ble opprettet under året",
             "format": "int64",
             "example": 23456
           },
           "journalposttype": {
             "type": "string",
+            "minLength": 1,
+            "maxLength": 100,
             "description": "Navn på type journalpost"
           },
           "journalstatus": {
             "type": "string",
+            "minLength": 1,
+            "maxLength": 100,
             "description": "Status til journalposten, dvs. om dokumentet er registrert, under behandling eller endelig arkivert"
           },
           "dokumentetsDato": {
@@ -855,6 +1116,8 @@
           },
           "tittel": {
             "type": "string",
+            "minLength": 1,
+            "maxLength": 1000,
             "description": "Tittel eller navn på arkivenheten",
             "example": "Gjennomføringsplan"
           }
@@ -866,60 +1129,79 @@
         "properties": {
           "mappeId": {
             "type": "string",
+            "minLength": 1,
+            "maxLength": 100,
             "description": "Entydig identifikasjon av mappen innenfor det arkivet mappen tilhører",
             "example": "fc051651-b853-4b4d-a7cd-fb2beea54356"
           },
           "mappeSystemId": {
             "type": "string",
+            "minLength": 1,
+            "maxLength": 100,
             "description": "Entydig identifikasjon av mappen innenfor det arkivskapende organet",
             "example": "fc051651-b853-4b4d-a7cd-fb2beea54356"
           },
           "saksaar": {
             "type": "integer",
+            "pattern": "^[0-9]{4}$",
+            "minimum": 1900,
             "description": "Viser året saksmappen ble opprettet",
             "format": "int32",
             "example": 2005
           },
           "sakssekvensnummer": {
             "type": "integer",
+            "minimum": 1,
             "description": "Viser rekkefølgen når saksmappen ble opprettet innenfor året",
             "format": "int64",
             "example": 648677
           },
           "systemId": {
             "type": "string",
+            "minLength": 1,
+            "maxLength": 100,
             "description": "Entydig identifikasjon av journalposten innenfor det arkivskapende organet",
             "example": "7044a03d-c459-4cbe-a4c3-371cc6751215"
           },
           "registreringsId": {
             "type": "string",
+            "minLength": 1,
+            "maxLength": 100,
             "description": "Entydig identifikasjon av registreringen innenfor arkivet",
             "example": "5f9e9bc8-ffc1-40c0-8fdd-3b5ee32a2e43"
           },
           "journalpostnummer": {
             "type": "integer",
+            "minimum": 1,
             "description": "Viser rekkefølgen på journalpostene innenfor saksmappen",
             "format": "int64",
             "example": 17
           },
           "journalaar": {
             "type": "integer",
+            "minimum": 1900,
+            "pattern": "^[0-9]{4}$",
             "description": "Viser året journalposten ble opprettet",
             "format": "int32",
             "example": 2024
           },
           "journalsekvensnummer": {
             "type": "integer",
+            "minimum": 1,
             "description": "Viser rekkefølgen når journalposten ble opprettet under året",
             "format": "int64",
             "example": 23456
           },
           "journalposttype": {
             "type": "string",
+            "minLength": 1,
+            "maxLength": 100,
             "description": "Navn på type journalpost"
           },
           "journalstatus": {
             "type": "string",
+            "minLength": 1,
+            "maxLength": 100,
             "description": "Status til journalposten, dvs. om dokumentet er registrert, under behandling eller endelig arkivert"
           },
           "journaldato": {
@@ -936,11 +1218,15 @@
           },
           "tittel": {
             "type": "string",
+            "minLength": 1,
+            "maxLength": 1000,
             "description": "Tittel eller navn på arkivenheten",
             "example": "Gjennomføringsplan"
           },
           "saksbehandler": {
             "type": "string",
+            "minLength": 1,
+            "maxLength": 100,
             "description": "Navn på person som er saksbehandler",
             "example": "Kari Nordmann"
           },
@@ -964,7 +1250,7 @@
             "default": false
           }
         },
-        "description": "Konfigurasjon knyttet til utskrift av dokumentene, dersom forsendelsen sendes via post."
+        "description": "Konfigurasjon knyttet til utskrift av dokumentene dersom forsendelsen sendes via post."
       },
       "SendForsendelseResponse": {
         "required": [
@@ -981,7 +1267,7 @@
       },
       "Sikkerhetsniva": {
         "type": "string",
-        "description": "Hvilket sikkerhetsnivå som kreves for innlogging ved nedlasting eller signering.  BETYDELIG tilsvarer sikkerhetsnivå 3, HOYESTE tilsvarer sikkerhetsnivå 4. Ved HOYESTE sikkerhetsnivå må dokumentene krypteres før innsending.",
+        "description": "Hvilket sikkerhetsnivå som kreves for innlogging ved nedlasting eller signering. BETYDELIG tilsvarer sikkerhetsnivå 3, HOYESTE tilsvarer sikkerhetsnivå 4. Ved HOYESTE sikkerhetsnivå må dokumentene krypteres før innsending.",
         "enum": ["BETYDELIG", "HOYESTE"]
       },
       "ErrorMessage": {
