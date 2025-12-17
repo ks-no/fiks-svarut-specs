@@ -757,7 +757,7 @@
                 "mimeType": {
                   "type": "string",
                   "minLength": 1,
-                  "maxLength": 5,
+                  "maxLength": 50,
                   "description": "MIME type. Kun application/pdf kan printes. Dersom man ønsker å sende andre typer filer må forsendelsen markeres som kun digital, ellers må disse filene markeres som eksludert fra utskrift."
                 },
                 "dokumentType": {
@@ -780,14 +780,15 @@
                 "ekstraMetadata": {
                   "uniqueItems": true,
                   "type": "array",
-                  "description": "Kan benyttes til andre data som avsender vil ha med i forsendelsen.  TODO: IDAR",
+                  "maxItems": 20,
+                  "description": "Kan benyttes til andre data som avsender vil ha med i forsendelsen som er knyttet mot det enkelte dokument.",
                   "items": {
                     "$ref": "#/components/schemas/Metadata"
                   }
                 },
                 "inneholderPersonsensitivInformasjon": {
                   "type": "boolean",
-                  "description": "Brukes for å gjøre mottaker oppmerksom på at dokumentet kan inneholde sensitiv informasjon. -- TODO: IDAR",
+                  "description": "Brukes for å gjøre mottaker oppmerksom på at dokumentet kan inneholde sensitiv informasjon.",
                   "default": false
                 }
               }
@@ -805,7 +806,7 @@
             "minLength": 1,
             "maxLength": 100,
             "type": "string",
-            "description": "Fritekstfelt for å kunne identifisere forsendelsens type."
+            "description": "Oppgir hvilken type forsendelse dette er, og blir brukt til fordeling av forsendelser til forskjellige SvarInn mottakersystem. Denne må vere satt til en av de predefinerte forsendelsestypene som man finner som et valg på SvarInn mottakersystem."
           },
           "eksternReferanse": {
             "minLength": 1,
@@ -835,7 +836,7 @@
         "description": "Metadata for forsendelsen og tilhørende vedlegg for en forsendelse som skal sendes til helsepersonell eller helseforetak i Norsk Helsenett.",
         "required": [
           "tittel",
-          "mottakerType",
+          "mottakertype",
           "avsenderKontakt",
           "pasient"
         ],
@@ -853,7 +854,7 @@
             "type": "string",
             "description": "Beskrivelse av innholdet i forsendelsen utover det som er oppgitt i tittel."
           },
-          "mottakerType": {
+          "mottakertype": {
             "enum": [
               "FASTLEGE",
               "HER_ID"
@@ -926,7 +927,7 @@
                 "type": "string"
               }
             },
-            "description": "Informasjon om pasienten for hvem forsendelsen gjelder"
+            "description": "Informasjon om hvilken pasient forsendelsen gjelder for"
           },
           "eksponertFor": {
             "uniqueItems": true,
@@ -1004,11 +1005,13 @@
           "tekst": {
             "type": "string",
             "minLength": 1,
-            "maxLength": 200,
+            "maxLength": 100,
             "description": "Tekst for lenken."
           },
           "ledetekst": {
             "type": "string",
+            "minLength": 1,
+            "maxLength": 100,
             "description": "Tekst som kommer før lenken i den digitale meldingen."
           }
         },
@@ -1024,10 +1027,12 @@
           "key": {
             "type": "string",
             "minLength": 1,
-            "maxLength": 200
+            "maxLength": 100
           },
           "value": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
           }
         },
         "description": "Kan benyttes til andre data som avsender vil ha med i forsendelsen."
@@ -1052,7 +1057,7 @@
           "saksaar": {
             "type": "integer",
             "pattern": "^[0-9]{4}$",
-            "minimum": 1900,
+            "minimum": 1000,
             "description": "Viser året saksmappen ble opprettet",
             "format": "int32",
             "example": 2005
@@ -1088,7 +1093,7 @@
           "journalaar": {
             "type": "integer",
             "pattern": "^[0-9]{4}$",
-            "minimum": 1900,
+            "minimum": 1000,
             "description": "Viser året journalposten ble opprettet",
             "format": "int32",
             "example": 2024
@@ -1148,7 +1153,7 @@
           "saksaar": {
             "type": "integer",
             "pattern": "^[0-9]{4}$",
-            "minimum": 1900,
+            "minimum": 1000,
             "description": "Viser året saksmappen ble opprettet",
             "format": "int32",
             "example": 2005
@@ -1183,7 +1188,7 @@
           },
           "journalaar": {
             "type": "integer",
-            "minimum": 1900,
+            "minimum": 1000,
             "pattern": "^[0-9]{4}$",
             "description": "Viser året journalposten ble opprettet",
             "format": "int32",
@@ -1237,6 +1242,7 @@
           "ekstraMetadata": {
             "uniqueItems": true,
             "type": "array",
+            "maxItems": 20,
             "description": "Kan benyttes til andre Noark-metadata som avsender vil ha med i forsendelsen",
             "items": {
               "$ref": "#/components/schemas/Metadata"
