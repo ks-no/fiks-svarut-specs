@@ -6,7 +6,7 @@
     "contact": {
       "name": "Fiks-brukerstøtte",
       "url": "https://ks-no.github.io/",
-      "email": "fiks-utvikling@ks.no"
+      "email": "fiks@ksdigital.no"
     },
     "license": {
       "name": "MIT",
@@ -65,7 +65,7 @@
                   },
                   "dokumenter": {
                     "type": "array",
-                    "description": "Forsendelsens dokumenter. Multipart 'name' ignoreres, og trenger derfor ikke å være 'dokumenter'. Må ha samme rekkefølge som dokument-metadata, dette valideres via filename på part.",
+                    "description": "Forsendelsens dokumenter. Multipart 'name' ignoreres, og trenger derfor ikke å være 'dokumenter'. Må ha samme rekkefølge som dokument-metadata, dette valideres via 'filename' på part.",
                     "items": {
                       "type": "string",
                       "format": "binary"
@@ -78,7 +78,7 @@
         },
         "responses": {
           "200": {
-            "description": "ForsendelseId",
+            "description": "Returnerer et objekt som består av id til akseptert forsendelse",
             "content": {
               "application/json": {
                 "schema": {
@@ -142,7 +142,7 @@
         },
         "responses": {
           "200": {
-            "description": "ForsendelseId",
+            "description": "Returnerer et objekt som består av id til akseptert forsendelse",
             "content": {
               "application/json": {
                 "schema": {
@@ -191,10 +191,10 @@
                   "forsendelse": {
                     "$ref": "#/components/schemas/NhnForsendelse"
                   },
-                  "vedlegg": {
+                  "dokument": {
                     "type": "string",
                     "format": "binary",
-                    "description": "Vedlegg til forsendelsen. Multipart 'name' ignoreres, og trenger derfor ikke å være 'vedlegg', 'filename' benyttes som filnavn."
+                    "description": "Vedlegg til forsendelsen. Multipart 'name' ignoreres, og trenger derfor ikke å være 'dokument'. 'filename' benyttes som filnavn."
                   }
                 }
               }
@@ -203,7 +203,7 @@
         },
         "responses": {
           "200": {
-            "description": "ForsendelseId",
+            "description": "Returnerer et objekt som består av id til akseptert forsendelse",
             "content": {
               "application/json": {
                 "schema": {
@@ -230,7 +230,7 @@
         "tags": [
           "SendForsendelse"
         ],
-        "summary": "Sender forsendelse som skal printes og sendes i posten fra oppgitt konto. Denne skal kun brukes for forsendelser som ikke kan sendes digitalt.",
+        "summary": "TODO: Skal vi ha denne med? Print? Sender forsendelse som skal printes og sendes i posten fra oppgitt konto. Denne skal kun brukes for forsendelser som ikke kan sendes digitalt, og vil medføre økte kostnader.",
         "operationId": "sendTilPrint",
         "parameters": [
           {
@@ -267,7 +267,7 @@
         },
         "responses": {
           "200": {
-            "description": "ForsendelseId",
+            "description": "Returnerer et objekt som består av id til akseptert forsendelse",
             "content": {
               "application/json": {
                 "schema": {
@@ -378,7 +378,7 @@
           "postnummer": {
             "type": "string",
             "minLength": 1,
-            "maxLength": 70,
+            "maxLength": 20,
             "description": "Postnummer."
           },
           "landkode": {
@@ -410,7 +410,7 @@
         "description": "Postadresse til mottaker. Krever navn og adresse."
       },
       "PersonForsendelse": {
-        "description": "Metadata for forsendelsen og tilhørende dokumenter til person.",
+        "description": "Metadata for forsendelsen og tilhørende dokumenter til privatperson.",
         "required": [
           "mottaker",
           "tittel"
@@ -456,7 +456,7 @@
           },
           "kunDigitalLevering": {
             "type": "boolean",
-            "description": "INGEN GARANTI OM LEVERANSE. Dersom denne settes til true vil forsendelsen aldri bli printet. Dersom vi ikke klarer å levere via noen digitale kanaler får avsender ingen tilbakemelding.",
+            "description": "INGEN GARANTI OM LEVERANSE. Dersom denne settes til true vil forsendelsen aldri bli printet. Dersom vi ikke klarer å levere via noen digitale kanaler får avsender ingen direkte tilbakemelding.",
             "default": false
           },
           "kryptert": {
@@ -498,7 +498,7 @@
                   "type": "string",
                   "minLength": 1,
                   "maxLength": 50,
-                  "description": "MIME type. Kun application/pdf kan printes. Dersom man ønsker å sende andre typer filer må forsendelsen markeres som kun digital, ellers må disse filene markeres som eksludert fra utskrift."
+                  "description": "MIME type. Kun application/pdf kan printes. Dersom man ønsker å sende andre typer filer må forsendelsen markeres som kun digital, ellers må disse filene markeres som ekskludert fra utskrift."
                 },
                 "skalSigneres": {
                   "type": "boolean",
@@ -570,7 +570,7 @@
         "description": "Metadata for forsendelsen og tilhørende dokumenter som skal gå rett til print for å sendes via posten. Dette gjelder post til person der man ikke har fødsels- eller d-nummer, eller til organisasjoner der man ikke har organisasjonsnummer tilgjengelig.",
         "required": [
           "tittel",
-          "postadresse"
+          "mottaker"
         ],
         "type": "object",
         "properties": {
@@ -580,7 +580,7 @@
             "type": "string",
             "description": "Tittel på forsendelsen."
           },
-          "postadresse": {
+          "mottaker": {
             "$ref": "#/components/schemas/Postadresse"
           },
           "avgivendeSystem": {
@@ -650,11 +650,13 @@
             }
           },
           "eksternReferanse": {
+            "minLength": 1,
             "maxLength": 100,
             "type": "string",
             "description": "Fritekstfelt for ekstern id tilknyttet forsendelsen. Kan benyttes til søk i SvarUt-grensesnittet, samt oppslag via API."
           },
           "korrelasjonsid": {
+            "minLength": 1,
             "maxLength": 100,
             "type": "string",
             "description": "Fritekstfelt for korrelasjonsid tilknyttet forsendelsen ment for å gruppere flere forsendelser sammen. Kan benyttes til søk i SvarUt-grensesnittet."
@@ -760,6 +762,8 @@
                 },
                 "dokumentType": {
                   "type": "string",
+                  "minLength": 1,
+                  "maxLength": 100,
                   "description": "Fritekstfelt som kan brukes til å fortelle noe om dokumentets type. Kan brukes til Noark 4-dokumenttype."
                 },
                 "giroarkSide": {
@@ -1257,6 +1261,7 @@
           "id"
         ],
         "type": "object",
+        "description": "Inneholder en id til forsendelsen",
         "properties": {
           "id": {
             "type": "string",
