@@ -948,7 +948,7 @@
             "type": "string",
             "minLength": 1,
             "maxLength": 100,
-            "description": "AAktør som sendte forsendelsen fra avgivende system."
+            "description": "Aktør som sendte forsendelsen fra avgivende system."
           },
           "konteringskode": {
             "minLength": 1,
