@@ -230,7 +230,7 @@
         "tags": [
           "SendForsendelse"
         ],
-        "summary": "TODO: Skal vi ha denne med? Print? Sender forsendelse som skal printes og sendes i posten fra oppgitt konto. Denne skal kun brukes for forsendelser som ikke kan sendes digitalt, og vil medføre økte kostnader.",
+        "summary": "Sender forsendelse som skal printes. Om kontoen det sendes fra er konfigurert til å bruke driftsleverandøren til KS Digital vil den automatisk printes og sendes i posten, ellers må den manuelt printes. Denne skal kun brukes for forsendelser som ikke kan sendes digitalt, og vil medføre økte kostnader.",
         "operationId": "sendTilPrint",
         "parameters": [
           {
