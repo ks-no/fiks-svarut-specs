@@ -418,51 +418,28 @@
         "type": "object",
         "properties": {
           "tittel": {
-            "minLength": 1,
-            "maxLength": 1000,
-            "type": "string",
-            "description": "Tittel på forsendelsen. Tittel blir vist i tittelfeltet på melding i digitale postkasser."
+            "$ref": "#/components/schemas/tittel"
           },
           "mottaker": {
             "$ref": "#/components/schemas/Mottaker"
           },
           "eksponertFor": {
-            "uniqueItems": true,
-            "type": "array",
-            "description": "Liste med fødselsnummer og/eller organisasjonsnummer som skal få tilgang til forsendelsens dokumenter.",
-            "items": {
-              "type": "string",
-              "description": "Fødselsnummer eller organisasjonsnummer som skal få tilgang til forsendelsens dokumenter."
-            }
+            "$ref": "#/components/schemas/eksponertFor"
           },
           "avgivendeSystem": {
-            "minLength": 1,
-            "maxLength": 100,
-            "type": "string",
-            "description": "Identifiserer systemet som sender forsendelsen. Kan blant annet benyttes for statistikk og feilsøking."
+            "$ref": "#/components/schemas/avgivendeSystem"
           },
           "avgivendeSystemAktor": {
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 100,
-            "description": "Aktør som sendte forsendelsen fra avgivende system."
+            "$ref": "#/components/schemas/avgivendeSystemAktor"
           },
           "konteringskode": {
-            "minLength": 1,
-            "maxLength": 20,
-            "pattern": "^[a-zA-Z0-9_\\-.øæåØÆÅ]{0,20}$",
-            "type": "string",
-            "description": "Kode som beskriver faktureringskonto for forsendelsen. Kan benyttes for å gruppere meldingsstatistikk."
+            "$ref": "#/components/schemas/konteringskode"
           },
           "kunDigitalLevering": {
-            "type": "boolean",
-            "description": "INGEN GARANTI OM LEVERANSE. Dersom denne settes til true vil forsendelsen aldri bli printet. Dersom vi ikke klarer å levere via noen digitale kanaler får avsender ingen direkte tilbakemelding.",
-            "default": false
+            "$ref": "#/components/schemas/kunDigitalLevering"
           },
           "kryptert": {
-            "type": "boolean",
-            "description": "Settes til true dersom filene som sendes er kryptert med CMS ved bruk av SvarUt sin public-key.",
-            "default": false
+            "$ref": "#/components/schemas/kryptert"
           },
           "utskriftskonfigurasjon": {
             "$ref": "#/components/schemas/Utskriftskonfigurasjon"
@@ -474,9 +451,7 @@
             "$ref": "#/components/schemas/SvarSendesTil"
           },
           "svarPaForsendelseId": {
-            "type": "string",
-            "description": "Id til forsendelsen dette er et svar på.",
-            "format": "uuid"
+            "$ref": "#/components/schemas/svarPaForsendelseId"
           },
           "dokumenter": {
             "type": "array",
@@ -489,60 +464,36 @@
               "type": "object",
               "properties": {
                 "filnavn": {
-                  "minLength": 1,
-                  "maxLength": 226,
-                  "type": "string",
-                  "description": "Filnavn. Må være unikt for denne forsendelsen. Kan ikke inneholde noen av følgende tegn: * : \" \\ / < > | ?"
+                  "$ref": "#/components/schemas/filnavn"
                 },
                 "mimeType": {
-                  "type": "string",
-                  "minLength": 1,
-                  "maxLength": 50,
-                  "description": "MIME type. Kun application/pdf kan printes. Dersom man ønsker å sende andre typer filer må forsendelsen markeres som kun digital, ellers må disse filene markeres som ekskludert fra utskrift."
+                  "$ref": "#/components/schemas/mimeType"
+                },
+                "giroarkSide": {
+                  "$ref": "#/components/schemas/giroarkSide"
                 },
                 "skalSigneres": {
                   "type": "boolean",
                   "description": "Angir om dette dokumentet skal signeres. Kun ett dokument kan signeres, og det må ha mimeType application/pdf.",
                   "default": false
                 },
-                "giroarkSide": {
-                  "type": "integer",
-                  "format": "int32",
-                  "minimum": 1,
-                  "description": "Sidetall som skal printes på gult giroark. Digital versjon vil få grått giroark. Første side er 1, kan ikke overstige antall sider i PDF."
-                },
                 "skalEkskluderesFraUtskrift": {
-                  "type": "boolean",
-                  "description": "Dersom denne settes til true vil ikke dokumentet bli med ved eventuell utskrift av forsendelsen. Må benyttes for alle filer som ikke er av type application/pdf, med mindre forsendelsen markeres som kun digital.",
-                  "default": false
+                  "$ref": "#/components/schemas/skalEkskluderesFraUtskrift"
                 }
               }
             }
           },
           "lenker": {
-            "type": "array",
-            "maxItems": 5,
-            "description": "Lenker som blir sendt med i meldinger til digitale postkasser dersom meldings-malen er konfigurert til dette. Innsendt rekkefølge overholdes.",
-            "items": {
-              "$ref": "#/components/schemas/Lenke"
-            }
+            "$ref": "#/components/schemas/lenker"
           },
           "eksternReferanse": {
-            "minLength": 1,
-            "maxLength": 100,
-            "type": "string",
-            "description": "Fritekstfelt for ekstern id tilknyttet forsendelsen. Kan benyttes til søk i SvarUt-grensesnittet, samt oppslag via API."
+            "$ref": "#/components/schemas/eksternReferanse"
           },
           "kanSvarePaForsendelse": {
-            "type": "boolean",
-            "description": "Dersom dette feltet settes til true kreves det at svarSendesTil skal inneholde en gyldig adresse med gyldig organisasjonsnummer. Hvis forsendelsen aksepteres og sendes digitalt, vil det genereres en lenke til eDialog hvor mottaker kan sende et svar tilbake til adressen spesifisert i svarSendesTil.",
-            "default": false
+            "$ref": "#/components/schemas/kanSvarePaForsendelse"
           },
           "korrelasjonsid": {
-            "minLength": 1,
-            "maxLength": 100,
-            "type": "string",
-            "description": "Fritekstfelt for korrelasjonsid tilknyttet forsendelsen ment for å gruppere flere forsendelser sammen. Kan benyttes til søk i SvarUt-grensesnittet."
+            "$ref": "#/components/schemas/korrelasjonsid"
           },
           "signering" : {
             "type": "object",
@@ -575,37 +526,22 @@
         "type": "object",
         "properties": {
           "tittel": {
-            "minLength": 1,
-            "maxLength": 1000,
-            "type": "string",
-            "description": "Tittel på forsendelsen."
+            "$ref": "#/components/schemas/tittel"
           },
           "mottaker": {
             "$ref": "#/components/schemas/Postadresse"
           },
           "avgivendeSystem": {
-            "minLength": 1,
-            "maxLength": 100,
-            "type": "string",
-            "description": "Identifiserer systemet som sender forsendelsen. Kan blant annet benyttes for statistikk og feilsøking."
+            "$ref": "#/components/schemas/avgivendeSystem"
           },
           "avgivendeSystemAktor": {
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 100,
-            "description": "Aktør som startet utsending av forsendelsen i avgivende system."
+            "$ref": "#/components/schemas/avgivendeSystemAktor"
           },
           "konteringskode": {
-            "minLength": 1,
-            "maxLength": 20,
-            "pattern": "^[a-zA-Z0-9_\\-.øæåØÆÅ]{0,20}$",
-            "type": "string",
-            "description": "Kode som beskriver faktureringskonto for forsendelsen. Kan benyttes for å gruppere meldingsstatistikk."
+            "$ref": "#/components/schemas/konteringskode"
           },
           "kryptert": {
-            "type": "boolean",
-            "description": "Settes til true dersom filene som sendes er kryptert med CMS ved bruk av SvarUt sin public-key.",
-            "default": false
+            "$ref": "#/components/schemas/kryptert"
           },
           "utskriftskonfigurasjon": {
             "$ref": "#/components/schemas/Utskriftskonfigurasjon"
@@ -614,9 +550,7 @@
             "$ref": "#/components/schemas/SvarSendesTil"
           },
           "svarPaForsendelseId": {
-            "type": "string",
-            "description": "Id til forsendelsen dette er et svar på.",
-            "format": "uuid"
+            "$ref": "#/components/schemas/svarPaForsendelseId"
           },
           "dokumenter": {
             "type": "array",
@@ -629,10 +563,7 @@
               "type": "object",
               "properties": {
                 "filnavn": {
-                  "minLength": 1,
-                  "maxLength": 226,
-                  "type": "string",
-                  "description": "Filnavn. Må være unikt for denne forsendelsen. Kan ikke inneholde noen av følgende tegn: * : \" \\ / < > | ?"
+                  "$ref": "#/components/schemas/filnavn"
                 },
                 "mimeType": {
                   "type": "string",
@@ -641,25 +572,16 @@
                   "description": "MIME type. Kun application/pdf godtas."
                 },
                 "giroarkSide": {
-                  "type": "integer",
-                  "format": "int32",
-                  "minimum": 1,
-                  "description": "Sidetall som skal printes på gult giroark. Digital versjon vil få grått giroark. Første side er 1, kan ikke overstige antall sider i PDF."
+                  "$ref": "#/components/schemas/giroarkSide"
                 }
               }
             }
           },
           "eksternReferanse": {
-            "minLength": 1,
-            "maxLength": 100,
-            "type": "string",
-            "description": "Fritekstfelt for ekstern id tilknyttet forsendelsen. Kan benyttes til søk i SvarUt-grensesnittet, samt oppslag via API."
+            "$ref": "#/components/schemas/eksternReferanse"
           },
           "korrelasjonsid": {
-            "minLength": 1,
-            "maxLength": 100,
-            "type": "string",
-            "description": "Fritekstfelt for korrelasjonsid tilknyttet forsendelsen ment for å gruppere flere forsendelser sammen. Kan benyttes til søk i SvarUt-grensesnittet."
+            "$ref": "#/components/schemas/korrelasjonsid"
           }
         }
       },
@@ -672,51 +594,28 @@
         "type": "object",
         "properties": {
           "tittel": {
-            "minLength": 1,
-            "maxLength": 1000,
-            "type": "string",
-            "description": "Tittel på forsendelsen. Tittel blir vist i tittelfeltet på melding i digitale postkasser."
+            "$ref": "#/components/schemas/tittel"
           },
           "mottaker": {
             "$ref": "#/components/schemas/Mottaker"
           },
           "eksponertFor": {
-            "uniqueItems": true,
-            "type": "array",
-            "description": "Liste med fødselsnummer og organisasjonsnummer som skal få tilgang til å laste ned forsendelsens dokumenter.",
-            "items": {
-              "type": "string",
-              "description": "Fødselsnummer eller organisasjonsnummer som skal få tilgang til å laste ned forsendelsens dokumenter."
-            }
+            "$ref": "#/components/schemas/eksponertFor"
           },
           "avgivendeSystem": {
-            "minLength": 1,
-            "maxLength": 100,
-            "type": "string",
-            "description": "Identifiserer systemet som sender forsendelsen. Kan blant annet benyttes for statistikk og feilsøking."
+            "$ref": "#/components/schemas/avgivendeSystem"
           },
           "avgivendeSystemAktor": {
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 100,
-            "description": "Aktør som sendte forsendelsen fra avgivende system."
+            "$ref": "#/components/schemas/avgivendeSystemAktor"
           },
           "konteringskode": {
-            "minLength": 1,
-            "maxLength": 20,
-            "pattern": "^[a-zA-Z0-9_\\-.øæåØÆÅ]{0,20}$",
-            "type": "string",
-            "description": "Kode som beskriver faktureringskonto for forsendelsen. Kan benyttes for å gruppere meldingsstatistikk."
+            "$ref": "#/components/schemas/konteringskode"
           },
           "kunDigitalLevering": {
-            "type": "boolean",
-            "description": "INGEN GARANTI OM LEVERANSE. Dersom denne settes til true vil forsendelsen aldri bli printet. Dersom vi ikke klarer å levere via noen digitale kanaler får avsender ingen tilbakemelding.",
-            "default": false
+            "$ref": "#/components/schemas/kunDigitalLevering"
           },
           "kryptert": {
-            "type": "boolean",
-            "description": "Settes til true dersom filene som sendes er kryptert med CMS ved bruk av SvarUt sin public-key.",
-            "default": false
+            "$ref": "#/components/schemas/kryptert"
           },
           "utskriftskonfigurasjon": {
             "$ref": "#/components/schemas/Utskriftskonfigurasjon"
@@ -734,9 +633,7 @@
             "$ref": "#/components/schemas/SvarSendesTil"
           },
           "svarPaForsendelseId": {
-            "type": "string",
-            "description": "Id til forsendelsen dette er et svar på.",
-            "format": "uuid"
+            "$ref": "#/components/schemas/svarPaForsendelseId"
           },
           "dokumenter": {
             "type": "array",
@@ -749,16 +646,10 @@
               "type": "object",
               "properties": {
                 "filnavn": {
-                  "minLength": 1,
-                  "maxLength": 226,
-                  "type": "string",
-                  "description": "Filnavn. Må være unikt for denne forsendelsen. Kan ikke inneholde noen av følgende tegn: * : \" \\ / < > | ?"
+                  "$ref": "#/components/schemas/filnavn"
                 },
                 "mimeType": {
-                  "type": "string",
-                  "minLength": 1,
-                  "maxLength": 50,
-                  "description": "MIME type. Kun application/pdf kan printes. Dersom man ønsker å sende andre typer filer må forsendelsen markeres som kun digital, ellers må disse filene markeres som eksludert fra utskrift."
+                  "$ref": "#/components/schemas/mimeType"
                 },
                 "dokumentType": {
                   "type": "string",
@@ -767,15 +658,10 @@
                   "description": "Fritekstfelt som kan brukes til å fortelle noe om dokumentets type. Kan brukes til Noark 4-dokumenttype."
                 },
                 "giroarkSide": {
-                  "type": "integer",
-                  "format": "int32",
-                  "minimum": 1,
-                  "description": "Sidetall som skal printes på gult giroark. Digital versjon vil få grått giroark. Første side er 1, kan ikke overstige antall sider i PDF."
+                  "$ref": "#/components/schemas/giroarkSide"
                 },
                 "skalEkskluderesFraUtskrift": {
-                  "type": "boolean",
-                  "description": "Dersom denne settes til true vil ikke dokumentet bli med ved eventuell utskrift av forsendelsen. Må benyttes for alle filer som ikke er av type application/pdf, med mindre forsendelsen markeres som kun digital.",
-                  "default": false
+                  "$ref": "#/components/schemas/skalEkskluderesFraUtskrift"
                 },
                 "ekstraMetadata": {
                   "uniqueItems": true,
@@ -795,12 +681,7 @@
             }
           },
           "lenker": {
-            "type": "array",
-            "maxItems": 5,
-            "description": "Lenker som blir lagt ved meldinger til digitale postkasser om meldingsmal er konfigurert til dette. Innsendt rekkefølge overholdes.",
-            "items": {
-              "$ref": "#/components/schemas/Lenke"
-            }
+            "$ref": "#/components/schemas/lenker"
           },
           "forsendelsestype": {
             "minLength": 1,
@@ -809,21 +690,13 @@
             "description": "Oppgir hvilken type forsendelse dette er, og blir brukt til fordeling av forsendelser til forskjellige SvarInn mottakersystem. Denne må vere satt til en av de predefinerte forsendelsestypene som man finner som et valg på SvarInn mottakersystem."
           },
           "eksternReferanse": {
-            "minLength": 1,
-            "maxLength": 100,
-            "type": "string",
-            "description": "Fritekstfelt for ekstern id tilknyttet forsendelsen. Kan benyttes til søk i SvarUt-grensesnittet, samt oppslag via API."
+            "$ref": "#/components/schemas/eksternReferanse"
           },
           "korrelasjonsid": {
-            "minLength": 1,
-            "maxLength": 100,
-            "type": "string",
-            "description": "Fritekstfelt for korrelasjonsid tilknyttet forsendelsen ment for å gruppere flere forsendelser sammen. Kan benyttes til søk i SvarUt-grensesnittet."
+            "$ref": "#/components/schemas/korrelasjonsid"
           },
           "kanSvarePaForsendelse": {
-            "type": "boolean",
-            "description": "Dersom dette feltet settes til true kreves det at svarSendesTil skal inneholde en gyldig adresse med gyldig organisasjonsnummer. Hvis forsendelsen aksepteres og sendes digitalt, vil det genereres en lenke til eDialog hvor mottaker kan sende et svar tilbake til adressen spesifisert i svarSendesTil.",
-            "default": false
+            "$ref": "#/components/schemas/kanSvarePaForsendelse"
           },
           "taushetsbelagtPost": {
             "type": "boolean",
@@ -930,62 +803,34 @@
             "description": "Informasjon om hvilken pasient forsendelsen gjelder for"
           },
           "eksponertFor": {
-            "uniqueItems": true,
-            "type": "array",
-            "description": "Liste med fødselsnummer og/eller organisasjonsnummer som skal få tilgang til forsendelsens dokumenter.",
-            "items": {
-              "type": "string",
-              "description": "Liste med fødselsnummer og/eller organisasjonsnummer som skal få tilgang til forsendelsens dokumenter."
-            }
+            "$ref": "#/components/schemas/eksponertFor"
           },
           "avgivendeSystem": {
-            "minLength": 1,
-            "maxLength": 100,
-            "type": "string",
-            "description": "Identifiserer systemet som sender forsendelsen. Kan blant annet benyttes for statistikk og feilsøking."
+            "$ref": "#/components/schemas/avgivendeSystem"
           },
           "avgivendeSystemAktor": {
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 100,
-            "description": "Aktør som sendte forsendelsen fra avgivende system."
+            "$ref": "#/components/schemas/avgivendeSystemAktor"
           },
           "konteringskode": {
-            "minLength": 1,
-            "maxLength": 20,
-            "pattern": "^[a-zA-Z0-9_\\-.øæåØÆÅ]{0,20}$",
-            "type": "string",
-            "description": "Kode som beskriver faktureringskonto for forsendelsen. Kan benyttes for å gruppere meldingsstatistikk."
+            "$ref": "#/components/schemas/konteringskode"
           },
           "kunDigitalLevering": {
-            "type": "boolean",
-            "description": "INGEN GARANTI OM LEVERANSE. Dersom denne settes til true vil forsendelsen aldri bli printet. Dersom vi ikke klarer å levere via noen digitale kanaler får avsender ingen tilbakemelding.",
-            "default": false
+            "$ref": "#/components/schemas/kunDigitalLevering"
           },
           "kryptert": {
-            "type": "boolean",
-            "description": "Settes til true dersom filene som sendes er kryptert med CMS ved bruk av SvarUt sin public-key.",
-            "default": false
+            "$ref": "#/components/schemas/kryptert"
           },
           "utskriftskonfigurasjon": {
             "$ref": "#/components/schemas/Utskriftskonfigurasjon"
           },
           "svarPaForsendelseId": {
-            "type": "string",
-            "description": "Id til forsendelsen dette er et svar på.",
-            "format": "uuid"
+            "$ref": "#/components/schemas/svarPaForsendelseId"
           },
           "eksternReferanse": {
-            "minLength": 1,
-            "maxLength": 100,
-            "type": "string",
-            "description": "Fritekstfelt for ekstern id tilknyttet forsendelsen. Kan benyttes til søk i SvarUt-grensesnittet, samt oppslag via API."
+            "$ref": "#/components/schemas/eksternReferanse"
           },
           "korrelasjonsid": {
-            "minLength": 1,
-            "maxLength": 100,
-            "type": "string",
-            "description": "Fritekstfelt for korrelasjonsid tilknyttet forsendelsen ment for å gruppere flere forsendelser sammen. Kan benyttes til søk i SvarUt-grensesnittet."
+            "$ref": "#/components/schemas/korrelasjonsid"
           }
         }
       },
@@ -1280,6 +1125,103 @@
         "type": "string",
         "description": "Hvilket sikkerhetsnivå som kreves for innlogging ved nedlasting eller signering. BETYDELIG tilsvarer sikkerhetsnivå 3, HOYESTE tilsvarer sikkerhetsnivå 4. Ved HOYESTE sikkerhetsnivå må dokumentene krypteres før innsending.",
         "enum": ["BETYDELIG", "HOYESTE"]
+      },
+      "tittel": {
+        "minLength": 1,
+        "maxLength": 1000,
+        "type": "string",
+        "description": "Tittel på forsendelsen. Tittel blir vist i tittelfeltet på melding i digitale postkasser."
+      },
+      "konteringskode": {
+        "minLength": 1,
+        "maxLength": 20,
+        "pattern": "^[a-zA-Z0-9_\\-.øæåØÆÅ]{0,20}$",
+        "type": "string",
+        "description": "Kode som beskriver faktureringskonto for forsendelsen. Kan benyttes for å gruppere meldingsstatistikk."
+      },
+      "eksponertFor": {
+        "uniqueItems": true,
+        "type": "array",
+        "description": "Liste med fødselsnummer og/eller organisasjonsnummer som skal få tilgang til forsendelsens dokumenter.",
+        "items": {
+          "type": "string",
+          "description": "Fødselsnummer eller organisasjonsnummer som skal få tilgang til forsendelsens dokumenter."
+        }
+      },
+      "avgivendeSystem": {
+        "minLength": 1,
+        "maxLength": 100,
+        "type": "string",
+        "description": "Identifiserer systemet som sender forsendelsen. Kan blant annet benyttes for statistikk og feilsøking."
+      },
+      "avgivendeSystemAktor": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 100,
+        "description": "Aktør som sendte forsendelsen fra avgivende system."
+      },
+      "kunDigitalLevering": {
+        "type": "boolean",
+        "description": "INGEN GARANTI OM LEVERANSE. Dersom denne settes til true vil forsendelsen aldri bli printet. Dersom vi ikke klarer å levere via noen digitale kanaler får avsender ingen direkte tilbakemelding.",
+        "default": false
+      },
+      "kryptert": {
+        "type": "boolean",
+        "description": "Settes til true dersom filene som sendes er kryptert med CMS ved bruk av SvarUt sin public-key.",
+        "default": false
+      },
+      "svarPaForsendelseId": {
+        "type": "string",
+        "description": "Id til forsendelsen dette er et svar på.",
+        "format": "uuid"
+      },
+      "filnavn": {
+        "minLength": 1,
+        "maxLength": 226,
+        "type": "string",
+        "description": "Filnavn. Må være unikt for denne forsendelsen. Kan ikke inneholde noen av følgende tegn: * : \" \\ / < > | ?"
+      },
+      "mimeType": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 50,
+        "description": "MIME type. Kun application/pdf kan printes. Dersom man ønsker å sende andre typer filer må forsendelsen markeres som kun digital, ellers må disse filene markeres som ekskludert fra utskrift."
+      },
+      "skalEkskluderesFraUtskrift": {
+        "type": "boolean",
+        "description": "Dersom denne settes til true vil ikke dokumentet bli med ved eventuell utskrift av forsendelsen. Må benyttes for alle filer som ikke er av type application/pdf, med mindre forsendelsen markeres som kun digital.",
+        "default": false
+      },
+      "giroarkSide": {
+        "type": "integer",
+        "format": "int32",
+        "minimum": 1,
+        "description": "Sidetall som skal printes på gult giroark. Digital versjon vil få grått giroark. Første side er 1, kan ikke overstige antall sider i PDF."
+      },
+      "lenker": {
+        "type": "array",
+        "maxItems": 5,
+        "description": "Lenker som blir sendt med i meldinger til digitale postkasser dersom meldings-malen er konfigurert til dette. Innsendt rekkefølge overholdes.",
+        "items": {
+          "$ref": "#/components/schemas/Lenke"
+        }
+      },
+      "eksternReferanse": {
+        "minLength": 1,
+        "maxLength": 100,
+        "type": "string",
+        "description": "Fritekstfelt for ekstern id tilknyttet forsendelsen. Kan benyttes til søk i SvarUt-grensesnittet, samt oppslag via API."
+      },
+      "kanSvarePaForsendelse": {
+        "type": "boolean",
+        "description": "Dersom dette feltet settes til true kreves det at svarSendesTil skal inneholde en gyldig adresse med gyldig organisasjonsnummer. Hvis forsendelsen aksepteres og sendes digitalt, vil det genereres en lenke til eDialog hvor mottaker kan sende et svar tilbake til adressen spesifisert i svarSendesTil.",
+        "default": false
+      },
+      "korrelasjonsid": {
+        "minLength": 1,
+        "maxLength": 100,
+        "type": "string",
+        "description": "Fritekstfelt for korrelasjonsid tilknyttet forsendelsen ment for å gruppere flere forsendelser sammen. Kan benyttes til søk i SvarUt-grensesnittet."
       },
       "ErrorMessage": {
         "type": "object",
