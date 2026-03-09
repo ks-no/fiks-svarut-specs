@@ -333,7 +333,7 @@
             "type": "string",
             "minLength": 1,
             "maxLength": 100,
-            "description": "Navn på organisasjon eller person som svaret skal sendes til."
+            "description": "Navn på organisasjon, person eller NHN-mottaker som svaret skal sendes til."
           },
           "type": {
             "type" : "string",
