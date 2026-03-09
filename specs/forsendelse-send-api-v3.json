@@ -337,13 +337,13 @@
           },
           "type": {
             "type" : "string",
-            "description" : "Hvilken type mottaker digitalId refererer til.",
+            "description" : "Hvilken type mottaker digitalId refererer til. Må være ORGANISASJON dersom kanSvareViaEdialog-feltet på forsendelsen er satt til true.",
             "enum" : [ "PERSON", "ORGANISASJON", "NHN_MOTTAKER" ]
           },
           "digitalId": {
             "type": "string",
             "pattern": "^\\d{1,11}$",
-            "description": "Et gyldig organisasjonsnummer eller fødselsnummer som svar skal sendes til. Nødvendig for å sende forsendelsen digitalt. Må være et organisasjonsnummer om svarPaForsendelse-feltet på forsendelse er satt til true. "
+            "description": "Gyldig organisasjonsnummer, fødselsnummer eller HER-id som svar skal sendes til. Valideres i henhold til hva som er satt i type-feltet."
           },
           "adresse": {
             "$ref": "#/components/schemas/Adresse"
