@@ -757,7 +757,7 @@
             "minimum": 1,
             "type": "integer",
             "format": "int32",
-            "description": "HER-id til mottaker. Påkrevd om mottakerType er satt til HER_ID.",
+            "description": "HER-id til mottaker. Påkrevd om mottakertype er satt til HER_ID.",
             "nullable": true
           },
           "avsenderKontakt": {
@@ -926,8 +926,8 @@
           },
           "saksaar": {
             "type": "integer",
-            "pattern": "^[0-9]{4}$",
             "minimum": 1000,
+            "maximum": 3000,
             "description": "Viser året saksmappen ble opprettet",
             "format": "int32",
             "example": 2005,
@@ -967,8 +967,8 @@
           },
           "journalaar": {
             "type": "integer",
-            "pattern": "^[0-9]{4}$",
             "minimum": 1000,
+            "maximum": 3000,
             "description": "Viser året journalposten ble opprettet",
             "format": "int32",
             "example": 2024,
@@ -1035,8 +1035,8 @@
           },
           "saksaar": {
             "type": "integer",
-            "pattern": "^[0-9]{4}$",
             "minimum": 1000,
+            "maximum": 3000,
             "description": "Viser året saksmappen ble opprettet",
             "format": "int32",
             "example": 2005,
@@ -1077,7 +1077,7 @@
           "journalaar": {
             "type": "integer",
             "minimum": 1000,
-            "pattern": "^[0-9]{4}$",
+            "maximum": 3000,
             "description": "Viser året journalposten ble opprettet",
             "format": "int32",
             "example": 2024,
@@ -1227,8 +1227,7 @@
       "kryptert": {
         "type": "boolean",
         "nullable": true,
-        "description": "Settes til true dersom filene som sendes er kryptert med CMS ved bruk av SvarUt sin public-key.",
-        "default": false
+        "description": "Må settes til true dersom filene som sendes er kryptert med CMS ved bruk av SvarUt sin public-key."
       },
       "svarPaForsendelseId": {
         "type": "string",
