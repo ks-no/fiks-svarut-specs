@@ -328,6 +328,7 @@
           "navn", "type", "digitalId", "adresse"
         ],
         "type": "object",
+        "nullable": true,
         "properties": {
           "navn": {
             "type": "string",
@@ -404,6 +405,7 @@
           "navn", "adresse"
         ],
         "type": "object",
+        "nullable": true,
         "properties": {
           "navn": {
             "type": "string",
@@ -484,7 +486,6 @@
                 "skalSigneres": {
                   "type": "boolean",
                   "description": "Angir om dette dokumentet skal signeres. Kun ett dokument kan signeres, og det må ha mimeType application/pdf.",
-                  "default": false,
                   "nullable": true
                 },
                 "skalEkskluderesFraUtskrift": {
@@ -690,7 +691,6 @@
                 "inneholderPersonsensitivInformasjon": {
                   "type": "boolean",
                   "description": "Brukes for å gjøre mottaker oppmerksom på at dokumentet kan inneholde sensitiv informasjon.",
-                  "default": false,
                   "nullable": true
                 }
               }
@@ -718,7 +718,6 @@
           "taushetsbelagtPost": {
             "type": "boolean",
             "description": "Dersom denne settes til true vil forsendelsen, om den går til Altinn og mottaker er en organisasjon, sendes til tjenesten for taushetsbelagt post. Les mer om tilgangsstyring for taushetsbelagt post på https://minside.kommune.no/tbp.",
-            "default": false,
             "nullable": true
           }
         }
@@ -907,6 +906,7 @@
       },
       "NoarkMetadataForImport": {
         "type": "object",
+        "nullable": true,
         "properties": {
           "mappeId": {
             "type": "string",
@@ -1016,6 +1016,7 @@
       },
       "NoarkMetadataFraAvleverendeSakssystem": {
         "type": "object",
+        "nullable": true,
         "properties": {
           "mappeId": {
             "type": "string",
@@ -1150,11 +1151,11 @@
       },
       "Utskriftskonfigurasjon": {
         "type": "object",
+        "nullable": true,
         "properties": {
           "tosidig": {
             "type": "boolean",
             "description": "Angir om begge sider av arket skal benyttes ved utskrift.",
-            "default": false,
             "nullable": true
           }
         },
@@ -1221,8 +1222,7 @@
       "kunDigitalLevering": {
         "type": "boolean",
         "nullable": true,
-        "description": "INGEN GARANTI OM LEVERANSE. Dersom denne settes til true vil forsendelsen aldri bli printet. Dersom vi ikke klarer å levere via noen digitale kanaler får avsender ingen direkte tilbakemelding.",
-        "default": false
+        "description": "INGEN GARANTI OM LEVERANSE. Dersom denne settes til true vil forsendelsen aldri bli printet. Dersom vi ikke klarer å levere via noen digitale kanaler får avsender ingen direkte tilbakemelding."
       },
       "kryptert": {
         "type": "boolean",
@@ -1250,8 +1250,7 @@
       "skalEkskluderesFraUtskrift": {
         "type": "boolean",
         "nullable": true,
-        "description": "Dersom denne settes til true vil ikke dokumentet bli med ved eventuell utskrift av forsendelsen. Må benyttes for alle filer som ikke er av type application/pdf, med mindre forsendelsen markeres som kun digital.",
-        "default": false
+        "description": "Dersom denne settes til true vil ikke dokumentet bli med ved eventuell utskrift av forsendelsen. Må benyttes for alle filer som ikke er av type application/pdf, med mindre forsendelsen markeres som kun digital."
       },
       "giroarkSide": {
         "type": "integer",
@@ -1279,8 +1278,7 @@
       "kanSvareViaEdialog": {
         "type": "boolean",
         "nullable": true,
-        "description": "Dersom dette feltet settes til true kreves det at svarSendesTil inneholder en gyldig adresse med gyldig organisasjonsnummer. Hvis forsendelsen aksepteres og sendes digitalt, vil det genereres en lenke til eDialog hvor mottaker kan sende et svar tilbake til adressen spesifisert i svarSendesTil.",
-        "default": false
+        "description": "Dersom dette feltet settes til true kreves det at svarSendesTil inneholder en gyldig adresse med gyldig organisasjonsnummer. Hvis forsendelsen aksepteres og sendes digitalt, vil det genereres en lenke til eDialog hvor mottaker kan sende et svar tilbake til adressen spesifisert i svarSendesTil."
       },
       "korrelasjonsid": {
         "minLength": 1,
