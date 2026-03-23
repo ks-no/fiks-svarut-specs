@@ -1178,7 +1178,7 @@
       "Sikkerhetsniva": {
         "type": "string",
         "nullable": true,
-        "description": "Hvilket sikkerhetsnivå som kreves for innlogging ved nedlasting eller signering. BETYDELIG tilsvarer sikkerhetsnivå 3, HOYESTE tilsvarer sikkerhetsnivå 4. Ved HOYESTE sikkerhetsnivå må dokumentene krypteres før innsending.",
+        "description": "Hvilket sikkerhetsnivå som kreves for innlogging ved nedlasting eller signering. Dersom feltet ikke settes benyttes BETYDELIG, som tilsvarer sikkerhetsnivå 3. HOYESTE tilsvarer sikkerhetsnivå 4. Ved HOYESTE sikkerhetsnivå må dokumentene krypteres før innsending.",
         "enum": ["BETYDELIG", "HOYESTE"]
       },
       "tittel": {
