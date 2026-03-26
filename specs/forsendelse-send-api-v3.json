@@ -1317,8 +1317,9 @@
           "errorCode": {
             "type": "string"
           },
-          "errorJson": {
-            "type": "string"
+          "errorJson" : {
+            "type" : "object",
+            "additionalProperties": true
           }
         }
       }
