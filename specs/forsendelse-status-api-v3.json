@@ -141,7 +141,8 @@
               "IKKE_LEVERT",
               "SLETTET",
               "SENDT_NHN_MOTTAKER",
-              "LEVERT_NHN_MOTTAKER"
+              "LEVERT_NHN_MOTTAKER",
+              "LEVERT_ALTINN"
             ]
           }
         },
