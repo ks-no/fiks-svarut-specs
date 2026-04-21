@@ -129,6 +129,8 @@
               "AKSEPTERT",
               "AVVIST",
               "FEILET_UNDER_MOTTAK",
+              "SENDT_ALTINN",
+              "LEVERT_ALTINN",
               "LEST",
               "SENDT_PRINT",
               "PRINTET",
@@ -140,9 +142,7 @@
               "IKKE_LEVERT",
               "SLETTET",
               "SENDT_NHN_MOTTAKER",
-              "LEVERT_NHN_MOTTAKER",
-              "SENDT_ALTINN",
-              "LEVERT_ALTINN"
+              "LEVERT_NHN_MOTTAKER"
             ]
           }
         },
