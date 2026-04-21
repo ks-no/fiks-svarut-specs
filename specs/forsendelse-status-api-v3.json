@@ -129,7 +129,7 @@
               "AKSEPTERT",
               "AVVIST",
               "FEILET_UNDER_MOTTAK",
-              "VARSLET",
+              "SENDT_ALTINN",
               "LEST",
               "SENDT_PRINT",
               "PRINTET",
