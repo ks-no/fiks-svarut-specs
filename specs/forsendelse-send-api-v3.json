@@ -405,7 +405,6 @@
           "navn", "adresse"
         ],
         "type": "object",
-        "nullable": true,
         "properties": {
           "navn": {
             "type": "string",
