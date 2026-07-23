@@ -3,6 +3,10 @@
   "info" : {
     "title" : "KS SvarUt: Forsendelsetyper API",
     "description" : "Oppslagstjeneste for forsendelsetyper",
+    "license" : {
+      "name" : "MIT",
+      "url" : "https://opensource.org/licenses/MIT"
+    },
     "contact" : {
       "name" : "Fiks-brukerstøtte",
       "url" : "https://ks-no.github.io/",
@@ -16,17 +20,21 @@
   }, {
     "url" : "https://svarut.ks.no/api",
     "description" : "SvarUt produksjonsmiljø"
-  } ],
-  "tags" : [ {
-    "name" : "Forsendelsestyper",
+   } ],
+   "security" : [ {
+     "bearerAuth" : [ ]
+   } ],
+   "tags" : [ {
+     "name" : "Forsendelsestyper",
     "description" : "API for henting av forsendelsetyper"
   } ],
   "paths" : {
     "/v2/forsendelsestyper" : {
-      "get" : {
-        "tags" : [ "Forsendelsestyper" ],
-        "description" : "Henter alle forsendelsetyper",
-        "operationId" : "hentForsendelsestyper",
+       "get" : {
+         "tags" : [ "Forsendelsestyper" ],
+         "summary" : "Hent alle forsendelsetyper",
+         "description" : "Henter alle forsendelsetyper",
+         "operationId" : "hentForsendelsestyper",
         "responses" : {
           "200" : {
             "description" : "Liste med forsendelsetyper",
@@ -53,6 +61,13 @@
     }
   },
   "components" : {
+    "securitySchemes" : {
+      "bearerAuth" : {
+        "type" : "http",
+        "scheme" : "bearer",
+        "bearerFormat" : "JWT"
+      }
+    },
     "schemas" : {
       "Forsendelsestyper" : {
         "required" : [ "forsendelsestyper" ],

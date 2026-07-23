@@ -3,6 +3,10 @@
   "info" : {
     "title" : "KS SvarUt: Lest API",
     "description" : "API for markering av forsendelser som lest",
+    "license" : {
+      "name" : "MIT",
+      "url" : "https://opensource.org/licenses/MIT"
+    },
     "contact" : {
       "name" : "Fiks-brukerstøtte",
       "url" : "https://ks-no.github.io/",
@@ -16,17 +20,21 @@
   }, {
     "url" : "https://svarut.ks.no/api",
     "description" : "SvarUt produksjonsmiljø"
-  } ],
-  "tags" : [ {
-    "name" : "Lest",
+   } ],
+   "security" : [ {
+     "bearerAuth" : [ ]
+   } ],
+   "tags" : [ {
+     "name" : "Lest",
     "description" : "API for markering av forsendelser som lest"
   } ],
   "paths" : {
     "/v2/forsendelser/{forsendelseId}/lest" : {
-      "post" : {
-        "tags" : [ "Lest" ],
-        "description" : "Markerer forsendelse som lest",
-        "operationId" : "settForsendelseLestAvEksterntSystem",
+       "post" : {
+         "tags" : [ "Lest" ],
+         "summary" : "Marker forsendelse som lest",
+         "description" : "Markerer forsendelse som lest",
+         "operationId" : "settForsendelseLestAvEksterntSystem",
         "parameters" : [ {
           "name" : "forsendelseId",
           "in" : "path",
@@ -65,6 +73,13 @@
     }
   },
   "components" : {
+    "securitySchemes" : {
+      "bearerAuth" : {
+        "type" : "http",
+        "scheme" : "bearer",
+        "bearerFormat" : "JWT"
+      }
+    },
     "schemas" : {
       "ErrorMessage" : {
         "type" : "object",

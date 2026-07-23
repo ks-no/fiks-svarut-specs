@@ -3,6 +3,10 @@
   "info" : {
     "title" : "KS SvarUt: Slett API",
     "description" : "API for sletting av dokumenter for forsendelser",
+    "license" : {
+      "name" : "MIT",
+      "url" : "https://opensource.org/licenses/MIT"
+    },
     "contact" : {
       "name" : "Fiks-brukerstøtte",
       "url" : "https://ks-no.github.io/",
@@ -16,17 +20,21 @@
   }, {
     "url" : "https://svarut.ks.no/api",
     "description" : "SvarUt produksjonsmiljø"
-  } ],
-  "tags" : [ {
-    "name" : "Slett",
+   } ],
+   "security" : [ {
+     "bearerAuth" : [ ]
+   } ],
+   "tags" : [ {
+     "name" : "Slett",
     "description" : "API for sletting av dokumenter for forsendelser"
   } ],
   "paths" : {
     "/v2/forsendelser/{forsendelseId}/dokumenter" : {
-      "delete" : {
-        "tags" : [ "Slett" ],
-        "description" : "Sletter dokumenter knyttet til forsendelse",
-        "operationId" : "slettFiler",
+       "delete" : {
+         "tags" : [ "Slett" ],
+         "summary" : "Slett dokumenter for forsendelse",
+         "description" : "Sletter dokumenter knyttet til forsendelse",
+         "operationId" : "slettFiler",
         "parameters" : [ {
           "name" : "forsendelseId",
           "in" : "path",
@@ -64,6 +72,13 @@
     }
   },
   "components" : {
+    "securitySchemes" : {
+      "bearerAuth" : {
+        "type" : "http",
+        "scheme" : "bearer",
+        "bearerFormat" : "JWT"
+      }
+    },
     "schemas" : {
       "ErrorMessage" : {
         "type" : "object",

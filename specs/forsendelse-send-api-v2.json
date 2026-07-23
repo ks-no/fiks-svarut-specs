@@ -3,6 +3,10 @@
   "info" : {
     "title" : "KS SvarUt: Send forsendelse-API",
     "description" : "API for sending av forsendelser",
+    "license" : {
+      "name" : "MIT",
+      "url" : "https://opensource.org/licenses/MIT"
+    },
     "contact" : {
       "name" : "Fiks-brukerstøtte",
       "url" : "https://ks-no.github.io/",
@@ -16,17 +20,21 @@
   }, {
     "url" : "https://svarut.ks.no/api",
     "description" : "SvarUt produksjonsmiljø"
-  } ],
-  "tags" : [ {
-    "name" : "Send",
+   } ],
+   "security" : [ {
+     "bearerAuth" : [ ]
+   } ],
+   "tags" : [ {
+     "name" : "Send",
     "description" : "API for sending av forsendelser"
   } ],
   "paths" : {
     "/v2/kontoer/{kontoId}/forsendelser" : {
-      "post" : {
-        "tags" : [ "Send" ],
-        "description" : "Sender forsendelse fra konto",
-        "operationId" : "send",
+       "post" : {
+         "tags" : [ "Send" ],
+         "summary" : "Send forsendelse",
+         "description" : "Sender forsendelse fra konto",
+         "operationId" : "send",
         "parameters" : [ {
           "name" : "kontoId",
           "in" : "path",
@@ -62,6 +70,13 @@
     }
   },
   "components" : {
+    "securitySchemes" : {
+      "bearerAuth" : {
+        "type" : "http",
+        "scheme" : "bearer",
+        "bearerFormat" : "JWT"
+      }
+    },
     "schemas" : {
       "Adresse" : {
         "required" : [ "navn" ],

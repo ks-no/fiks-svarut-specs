@@ -3,6 +3,10 @@
   "info" : {
     "title" : "KS SvarUt: Mottakersystem-API",
     "description" : "API henting av mottakersystem",
+    "license" : {
+      "name" : "MIT",
+      "url" : "https://opensource.org/licenses/MIT"
+    },
     "contact" : {
       "name" : "Fiks-brukerstøtte",
       "url" : "https://ks-no.github.io/",
@@ -16,17 +20,21 @@
   }, {
     "url" : "https://svarut.ks.no/api",
     "description" : "SvarUt produksjonsmiljø"
-  } ],
-  "tags" : [ {
-    "name" : "Mottakersystem",
+   } ],
+   "security" : [ {
+     "bearerAuth" : [ ]
+   } ],
+   "tags" : [ {
+     "name" : "Mottakersystem",
     "description" : "API henting av mottakersystem"
   } ],
   "paths" : {
     "/v2/mottakersystem" : {
-      "get" : {
-        "tags" : [ "Mottakersystem" ],
-        "description" : "Henter mottakersystem tilknyttet et orgnummer",
-        "operationId" : "hentMottakersystem",
+       "get" : {
+         "tags" : [ "Mottakersystem" ],
+         "summary" : "Hent mottakersystem",
+         "description" : "Henter mottakersystem tilknyttet et orgnummer",
+         "operationId" : "hentMottakersystem",
         "parameters" : [ {
           "name" : "organisasjonsnummer",
           "in" : "query",
@@ -79,6 +87,13 @@
     }
   },
   "components" : {
+    "securitySchemes" : {
+      "bearerAuth" : {
+        "type" : "http",
+        "scheme" : "bearer",
+        "bearerFormat" : "JWT"
+      }
+    },
     "schemas" : {
       "Mottakersystem" : {
         "required" : [ "forsendelseType", "id", "navn", "niva", "organisasjonsnummer" ],

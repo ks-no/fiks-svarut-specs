@@ -16,17 +16,21 @@
   }, {
     "url" : "https://svarut.ks.no/api",
     "description" : "SvarUt produksjonsmiljø"
-  } ],
-  "tags" : [ {
-    "name" : "Hendelser",
+   } ],
+   "security" : [ {
+     "bearerAuth" : [ ]
+   } ],
+   "tags" : [ {
+     "name" : "Hendelser",
     "description" : "API for henting av hendelser for forsendelse"
   } ],
   "paths" : {
     "/v2/forsendelser/{forsendelseId}/hendelser" : {
-      "get" : {
-        "tags" : [ "Hendelser" ],
-        "description" : "Hent hendelser for forsendelsen",
-        "operationId" : "hentHendelser",
+       "get" : {
+         "tags" : [ "Hendelser" ],
+         "summary" : "Hent hendelser for forsendelsen",
+         "description" : "Hent hendelser for forsendelsen",
+         "operationId" : "hentHendelser",
         "parameters" : [ {
           "name" : "forsendelseId",
           "in" : "path",
@@ -61,10 +65,11 @@
       }
     },
     "/v2/forsendelser/{forsendelseId}/signeringshendelser" : {
-      "get" : {
-        "tags" : [ "Hendelser" ],
-        "description" : "Hent signeringshendelser for forsendelsen",
-        "operationId" : "hentSigneringshendelser",
+       "get" : {
+         "tags" : [ "Hendelser" ],
+         "summary" : "Hent signeringshendelser for forsendelsen",
+         "description" : "Hent signeringshendelser for forsendelsen",
+         "operationId" : "hentSigneringshendelser",
         "parameters" : [ {
           "name" : "forsendelseId",
           "in" : "path",
@@ -100,6 +105,13 @@
     }
   },
   "components" : {
+    "securitySchemes" : {
+      "bearerAuth" : {
+        "type" : "http",
+        "scheme" : "bearer",
+        "bearerFormat" : "JWT"
+      }
+    },
     "schemas" : {
       "Hendelse" : {
         "required" : [ "hendelse", "tidspunkt" ],

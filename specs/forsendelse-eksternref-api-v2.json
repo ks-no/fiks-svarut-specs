@@ -3,6 +3,10 @@
   "info" : {
     "title" : "KS SvarUt: Ekstern referanse-oppslag",
     "description" : "Oppslagstjeneste for eksterne referanser",
+    "license" : {
+      "name" : "MIT",
+      "url" : "https://opensource.org/licenses/MIT"
+    },
     "contact" : {
       "name" : "Fiks-brukerstøtte",
       "url" : "https://ks-no.github.io/",
@@ -17,6 +21,9 @@
     "url" : "https://svarut.ks.no/api",
     "description" : "SvarUt produksjonsmiljø"
   } ],
+  "security" : [ {
+    "bearerAuth" : [ ]
+  } ],
   "tags" : [ {
     "name" : "EksternRef",
     "description" : "API for henting av forsendelser knyttet til ekstern ref"
@@ -25,6 +32,7 @@
     "/v2/kontoer/{kontoId}/forsendelser" : {
       "get" : {
         "tags" : [ "EksternRef" ],
+        "summary" : "Hent forsendelse-id-er for ekstern referanse",
         "description" : "Henter id for forsendelser tilknyttet ekstern ref",
         "operationId" : "finnForsendelserKnyttetTilEksternRef",
         "parameters" : [ {
@@ -55,6 +63,16 @@
               }
             }
           },
+          "400" : {
+            "description" : "Ugyldig forespoersel",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
           "default" : {
             "description" : "Feil",
             "content" : {
@@ -71,6 +89,7 @@
     "/v2/kontoer/{kontoId}/forsendelser/metadata" : {
       "get" : {
         "tags" : [ "EksternRef" ],
+        "summary" : "Hent forsendelsesmetadata for ekstern referanse",
         "description" : "Henter metadata for forsendelser tilknyttet ekstern ref",
         "operationId" : "finnForsendelserKnyttetTilEksternRefMedMetadata",
         "parameters" : [ {
@@ -101,6 +120,16 @@
               }
             }
           },
+          "400" : {
+            "description" : "Ugyldig forespoersel",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
           "default" : {
             "description" : "Feil",
             "content" : {
@@ -116,6 +145,13 @@
     }
   },
   "components" : {
+    "securitySchemes" : {
+      "bearerAuth" : {
+        "type" : "http",
+        "scheme" : "bearer",
+        "bearerFormat" : "JWT"
+      }
+    },
     "schemas" : {
       "EksternRefOppslagResponse" : {
         "required" : [ "forsendelseIds" ],
