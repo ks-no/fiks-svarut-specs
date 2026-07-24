@@ -32,8 +32,8 @@
     "/v2/forsendelser/{forsendelseId}/dokumenter" : {
        "delete" : {
          "tags" : [ "Slett" ],
-         "summary" : "Slett dokumenter for forsendelse",
-         "description" : "Sletter dokumenter knyttet til forsendelse",
+         "summary" : "Slett dokumenter knyttet til angitt forsendelse",
+         "description" : "Sletter dokumenter knyttet til angitt forsendelse",
          "operationId" : "slettFiler",
         "parameters" : [ {
           "name" : "forsendelseId",

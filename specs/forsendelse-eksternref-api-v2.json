@@ -32,7 +32,7 @@
     "/v2/kontoer/{kontoId}/forsendelser" : {
       "get" : {
         "tags" : [ "EksternRef" ],
-        "summary" : "Hent forsendelse-id-er for ekstern referanse",
+        "summary" : "Hent forsendelseids for ekstern referanse",
         "description" : "Henter id for forsendelser tilknyttet ekstern ref",
         "operationId" : "finnForsendelserKnyttetTilEksternRef",
         "parameters" : [ {
