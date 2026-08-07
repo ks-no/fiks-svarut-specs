@@ -47,10 +47,7 @@
           "name" : "slettetype",
           "in" : "query",
           "schema" : {
-            "type" : "string",
-            "description" : "Definerer hvilke dokumenter som skal slettes",
-            "default" : "ORIGINALDOKUMENTER",
-            "enum" : [ "ORIGINALDOKUMENTER", "ALLE" ]
+            "$ref" : "#/components/schemas/Slettetype"
           }
         } ],
         "responses" : {
@@ -80,6 +77,12 @@
       }
     },
     "schemas" : {
+      "Slettetype" : {
+        "type" : "string",
+        "description" : "Definerer hvilke dokumenter som skal slettes",
+        "default" : "ORIGINALDOKUMENTER",
+        "enum" : [ "ORIGINALDOKUMENTER", "ALLE" ]
+      },
       "ErrorMessage" : {
         "type" : "object",
         "properties" : {
