@@ -101,7 +101,6 @@
           "sisteStatusEndring" : {
             "type" : "string",
             "description" : "Tidspunkt for siste endring av status",
-            "format" : "date-time",
             "example" : "2023-01-01T11:33:55.008+01:00"
           },
           "status" : {
