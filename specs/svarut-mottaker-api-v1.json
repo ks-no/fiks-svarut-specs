@@ -3,6 +3,10 @@
   "info" : {
     "title" : "KS SvarUt: Mottaker API",
     "description" : "API for å hente forsendelse informasjon som mottaker",
+    "license" : {
+      "name" : "MIT",
+      "url" : "https://opensource.org/licenses/MIT"
+    },
     "contact" : {
       "name" : "Fiks-brukerstøtte",
       "url" : "https://ks-no.github.io/",
@@ -17,6 +21,9 @@
     "url" : "https://svarut.ks.no/api",
     "description" : "SvarUt produksjonsmiljø"
   } ],
+  "security" : [ {
+    "bearerAuth" : [ ]
+  } ],
   "tags" : [ {
     "name" : "MottakerV1",
     "description" : "API for å hente forsendelse informasjon som mottaker"
@@ -25,6 +32,7 @@
     "/v1/mottaker/forsendelser/{forsendelseId}/svar-metadata" : {
       "get" : {
         "tags" : [ "MottakerV1" ],
+        "summary" : "Hent svar metadata for forsendelse",
         "description" : "Henter svar metadata om forsendelsen",
         "operationId" : "hentForsendelseInfo",
         "parameters" : [ {
@@ -72,6 +80,13 @@
     }
   },
   "components" : {
+    "securitySchemes" : {
+      "bearerAuth" : {
+        "type" : "http",
+        "scheme" : "bearer",
+        "bearerFormat" : "JWT"
+      }
+    },
     "schemas" : {
       "Adresse" : {
         "required" : [ "adresse1", "navn", "poststed" ],
