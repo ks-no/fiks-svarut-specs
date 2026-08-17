@@ -1,0 +1,123 @@
+{
+  "openapi" : "3.0.1",
+  "info" : {
+    "title" : "KS SvarUt: Slett API",
+    "description" : "API for sletting av dokumenter for forsendelser",
+    "license" : {
+      "name" : "MIT",
+      "url" : "https://opensource.org/licenses/MIT"
+    },
+    "contact" : {
+      "name" : "Fiks-brukerstøtte",
+      "url" : "https://ks-no.github.io/",
+      "email" : "fiks@ksdigital.no"
+    },
+    "version" : "v2"
+  },
+  "servers" : [ {
+    "url" : "https://test.svarut.ks.no/api",
+    "description" : "SvarUt testmiljø"
+  }, {
+    "url" : "https://svarut.ks.no/api",
+    "description" : "SvarUt produksjonsmiljø"
+   } ],
+   "security" : [ {
+     "bearerAuth" : [ ]
+   } ],
+   "tags" : [ {
+     "name" : "Slett",
+    "description" : "API for sletting av dokumenter for forsendelser"
+  } ],
+  "paths" : {
+    "/v2/forsendelser/{forsendelseId}/dokumenter" : {
+       "delete" : {
+         "tags" : [ "Slett" ],
+         "summary" : "Slett dokumenter knyttet til angitt forsendelse",
+         "description" : "Sletter dokumenter knyttet til angitt forsendelse",
+         "operationId" : "slettFiler",
+        "parameters" : [ {
+          "name" : "forsendelseId",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "uuid"
+          }
+        }, {
+          "name" : "slettetype",
+          "in" : "query",
+          "schema" : {
+            "$ref" : "#/components/schemas/Slettetype"
+          }
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "Dokumenter slettet"
+          },
+          "default" : {
+            "description" : "Feil",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components" : {
+    "securitySchemes" : {
+      "bearerAuth" : {
+        "type" : "http",
+        "scheme" : "bearer",
+        "bearerFormat" : "JWT"
+      }
+    },
+    "schemas" : {
+      "Slettetype" : {
+        "type" : "string",
+        "description" : "Definerer hvilke dokumenter som skal slettes",
+        "default" : "ORIGINALDOKUMENTER",
+        "enum" : [ "ORIGINALDOKUMENTER", "ALLE" ]
+      },
+      "ErrorMessage" : {
+        "type" : "object",
+        "properties" : {
+          "timestamp" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "status" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "error" : {
+            "type" : "string"
+          },
+          "errorId" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "path" : {
+            "type" : "string"
+          },
+          "originalPath" : {
+            "type" : "string"
+          },
+          "message" : {
+            "type" : "string"
+          },
+          "errorCode" : {
+            "type" : "string"
+          },
+          "errorJson" : {
+            "type" : "string"
+          }
+        }
+      }
+    }
+  }
+}
