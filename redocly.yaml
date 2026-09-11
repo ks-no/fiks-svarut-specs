@@ -1,7 +1,27 @@
 extends:
   - recommended
 apis:
+  forsendelse-eksternref-api@v2:
+    root: ./specs/forsendelse-eksternref-api-v2.json
+  forsendelse-hendelser-api@v2:
+    root: ./specs/forsendelse-hendelser-api-v2.json
+  forsendelse-lest-api@v2:
+    root: ./specs/forsendelse-lest-api-v2.json
+  forsendelse-metadata-api@v2:
+    root: ./specs/forsendelse-metadata-api-v2.json
   forsendelse-send-api@v3:
     root: ./specs/forsendelse-send-api-v3.json
+  forsendelse-send-api@v2:
+    root: ./specs/forsendelse-send-api-v2.json
+  forsendelse-slett-api@v2:
+    root: ./specs/forsendelse-slett-api-v2.json
   forsendelse-status-api@v3:
     root: ./specs/forsendelse-status-api-v3.json
+  forsendelse-status-api@v2:
+    root: ./specs/forsendelse-status-api-v2.json
+  forsendelse-typer-api@v2:
+    root: ./specs/forsendelse-typer-api-v2.json
+  mottakersystem-api@v2:
+    root: ./specs/mottakersystem-api-v2.json
+  svarut-mottaker-api@v1:
+    root: ./specs/svarut-mottaker-api-v1.json
