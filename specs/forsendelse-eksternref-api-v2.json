@@ -208,6 +208,9 @@
           },
           "avgivendeSystem" : {
             "type" : "string"
+          },
+          "status" : {
+            "type" : "string"
           }
         },
         "description" : "Liste med metadata"
