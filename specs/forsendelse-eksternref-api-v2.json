@@ -196,7 +196,7 @@
         }
       },
       "Forsendelse" : {
-        "required" : [ "dato", "id" ],
+        "required" : [ "dato", "id", "status" ],
         "type" : "object",
         "properties" : {
           "id" : {
