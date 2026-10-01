@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.1",
   "info": {
-	"title": "KS SvarUt: NHN oppslag API",
-	"description": "API for oppslag i NHN adresseregister på HerId",
+	"title": "KS SvarUt: NHN API",
+	"description": "proxy API for  NHN tjenester",
 	"license": {
 	  "name": "MIT",
 	  "url": "https://opensource.org/licenses/MIT"
