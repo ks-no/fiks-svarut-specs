@@ -31,7 +31,7 @@
   ],
   "tags": [
 	{
-	  "name": "NhnOppslag",
+	  "name": "Nhn",
 	  "description": "API for oppslag i NHN adresseregister"
 	}
   ],
@@ -39,7 +39,7 @@
 	"/v1/nhn/oppslag/{herId}": {
 	  "get": {
 		"tags": [
-		  "NhnOppslag"
+		  "Nhn"
 		],
 		"summary": "Hent adresseregisteroppføring for HerId",
 		"description": "Henter en communication party fra NHN adresseregister basert på HerId",
