@@ -1,0 +1,395 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+	"title": "KS SvarUt: NHN API",
+	"description": "proxy API for  NHN tjenester",
+	"license": {
+	  "name": "MIT",
+	  "url": "https://opensource.org/licenses/MIT"
+	},
+	"contact": {
+	  "name": "Fiks-brukerstøtte",
+	  "url": "https://ks-no.github.io/",
+	  "email": "fiks@ksdigital.no"
+	},
+	"version": "v1"
+  },
+  "servers": [
+	{
+	  "url": "https://test.svarut.ks.no/api",
+	  "description": "SvarUt testmiljø"
+	},
+	{
+	  "url": "https://svarut.ks.no/api",
+	  "description": "SvarUt produksjonsmiljø"
+	}
+  ],
+  "security": [
+	{
+	  "bearerAuth": []
+	}
+  ],
+  "tags": [
+	{
+	  "name": "Nhn",
+	  "description": "API for oppslag i NHN adresseregister"
+	}
+  ],
+  "paths": {
+	"/v1/nhn/oppslag/{herId}": {
+	  "get": {
+		"tags": [
+		  "Nhn"
+		],
+		"summary": "Hent adresseregisteroppføring for HerId",
+		"description": "Henter en communication party fra NHN adresseregister basert på HerId",
+		"operationId": "adresseregisterOppslag",
+		"parameters": [
+		  {
+			"name": "herId",
+			"in": "path",
+			"required": true,
+			"description": "HerId som skal slås opp i NHN adresseregister",
+			"schema": {
+			  "type": "integer",
+			  "format": "int32",
+			  "minimum": 1
+			},
+			"example": 12345
+		  }
+		],
+		"responses": {
+		  "200": {
+			"description": "Communication party funnet for oppgitt HerId",
+			"content": {
+			  "application/json": {
+				"schema": {
+				  "$ref": "#/components/schemas/CommunicationParty"
+				}
+			  }
+			}
+		  },
+		  "404": {
+			"description": "Communication party finnes ikke for oppgitt HerId",
+			"content": {
+			  "application/json": {
+				"schema": {
+				  "$ref": "#/components/schemas/ErrorMessage"
+				}
+			  }
+			}
+		  },
+		  "default": {
+			"description": "Feil",
+			"content": {
+			  "application/json": {
+				"schema": {
+				  "$ref": "#/components/schemas/ErrorMessage"
+				}
+			  }
+			}
+		  }
+		}
+	  }
+	}
+  },
+  "components": {
+	"securitySchemes": {
+	  "bearerAuth": {
+		"type": "http",
+		"scheme": "bearer",
+		"bearerFormat": "JWT"
+	  }
+	},
+	"schemas": {
+	  "CommunicationParty": {
+		"type": "object",
+		"required": [
+		  "type",
+		  "herId",
+		  "amqpTransportStatus"
+		],
+		"properties": {
+		  "herId": {
+			"type": "integer",
+			"format": "int32"
+		  },
+		  "name": {
+			"type": "string"
+		  },
+		  "displayName": {
+			"type": "string"
+		  },
+		  "type": {
+			"$ref": "#/components/schemas/CommunicationPartyType"
+		  },
+		  "organizationDetails": {
+			"$ref": "#/components/schemas/OrganizationDetails"
+		  },
+		  "personDetails": {
+			"$ref": "#/components/schemas/PersonDetails"
+		  },
+		  "serviceDetails": {
+			"$ref": "#/components/schemas/ServiceDetails"
+		  },
+		  "currentSigningCertificate": {
+			"$ref": "#/components/schemas/CertificateMetadata"
+		  },
+		  "currentEncryptionCertificate": {
+			"$ref": "#/components/schemas/CertificateMetadata"
+		  },
+		  "email": {
+			"type": "string"
+		  },
+		  "homepageUrl": {
+			"type": "string"
+		  },
+		  "phoneNumber": {
+			"type": "string"
+		  },
+		  "faxNumber": {
+			"type": "string"
+		  },
+		  "ediAddress": {
+			"type": "string"
+		  },
+		  "fhirAddress": {
+			"type": "string"
+		  },
+		  "postalAddress": {
+			"$ref": "#/components/schemas/PostalAddress"
+		  },
+		  "amqpTransportStatus": {
+			"$ref": "#/components/schemas/AmqpTransportStatus"
+		  },
+		  "amqpAddress": {
+			"$ref": "#/components/schemas/AmqpAddress"
+		  },
+		  "validFrom": {
+			"type": "string",
+			"format": "date-time"
+		  },
+		  "validTo": {
+			"type": "string",
+			"format": "date-time"
+		  }
+		}
+	  },
+	  "CommunicationPartyType": {
+		"type": "string",
+		"enum": [
+		  "ORGANIZATION",
+		  "PERSON",
+		  "SERVICE"
+		]
+	  },
+	  "OrganizationDetails": {
+		"type": "object",
+		"required": [
+		  "businessType"
+		],
+		"properties": {
+		  "organizationNumber": {
+			"type": "string"
+		  },
+		  "businessType": {
+			"$ref": "#/components/schemas/AdministrativeCode"
+		  },
+		  "persons": {
+			"type": "array",
+			"items": {
+			  "type": "integer",
+			  "format": "int32"
+			}
+		  },
+		  "services": {
+			"type": "array",
+			"items": {
+			  "type": "integer",
+			  "format": "int32"
+			}
+		  }
+		}
+	  },
+	  "PersonDetails": {
+		"type": "object",
+		"required": [
+		  "hprNumber",
+		  "parentOrganization"
+		],
+		"properties": {
+		  "hprNumber": {
+			"type": "integer",
+			"format": "int32"
+		  },
+		  "parentOrganization": {
+			"$ref": "#/components/schemas/ParentOrganization"
+		  }
+		}
+	  },
+	  "ServiceDetails": {
+		"type": "object",
+		"required": [
+		  "serviceType",
+		  "parentOrganization"
+		],
+		"properties": {
+		  "serviceType": {
+			"$ref": "#/components/schemas/AdministrativeCode"
+		  },
+		  "interMunicipalityCoverageArea": {
+			"$ref": "#/components/schemas/InterMunicipalityCoverageArea"
+		  },
+		  "serviceSpecification": {
+			"type": "string"
+		  },
+		  "parentOrganization": {
+			"$ref": "#/components/schemas/ParentOrganization"
+		  }
+		}
+	  },
+	  "ParentOrganization": {
+		"type": "object",
+		"required": [
+		  "herId"
+		],
+		"properties": {
+		  "name": {
+			"type": "string"
+		  },
+		  "herId": {
+			"type": "integer",
+			"format": "int32"
+		  },
+		  "organizationNumber": {
+			"type": "string"
+		  }
+		}
+	  },
+	  "CertificateMetadata": {
+		"type": "object",
+		"properties": {
+		  "thumbprint": {
+			"type": "string"
+		  },
+		  "validFrom": {
+			"type": "string",
+			"format": "date-time"
+		  },
+		  "validTo": {
+			"type": "string",
+			"format": "date-time"
+		  }
+		}
+	  },
+	  "AdministrativeCode": {
+		"type": "object",
+		"properties": {
+		  "codeListId": {
+			"type": "string"
+		  },
+		  "value": {
+			"type": "string"
+		  },
+		  "name": {
+			"type": "string"
+		  },
+		  "url": {
+			"type": "string"
+		  }
+		}
+	  },
+	  "PostalAddress": {
+		"type": "object",
+		"properties": {
+		  "address": {
+			"type": "string"
+		  },
+		  "postalBox": {
+			"type": "string"
+		  },
+		  "postalCode": {
+			"type": "string"
+		  },
+		  "city": {
+			"type": "string"
+		  }
+		}
+	  },
+	  "AmqpTransportStatus": {
+		"type": "string",
+		"enum": [
+		  "Inherited",
+		  "Disabled",
+		  "Enabled"
+		]
+	  },
+	  "AmqpAddress": {
+		"type": "object",
+		"properties": {
+		  "amqpSyncQueue": {
+			"type": "string"
+		  },
+		  "amqpSyncReplyQueue": {
+			"type": "string"
+		  },
+		  "amqpAsyncQueue": {
+			"type": "string"
+		  },
+		  "amqpErrorQueue": {
+			"type": "string"
+		  }
+		}
+	  },
+	  "InterMunicipalityCoverageArea": {
+		"type": "object",
+		"properties": {
+		  "municipalityHerIds": {
+			"type": "array",
+			"items": {
+			  "type": "integer",
+			  "format": "int32"
+			}
+		  }
+		}
+	  },
+	  "ErrorMessage": {
+		"type": "object",
+		"properties": {
+		  "timestamp": {
+			"type": "integer",
+			"format": "int64"
+		  },
+		  "status": {
+			"type": "integer",
+			"format": "int32"
+		  },
+		  "error": {
+			"type": "string"
+		  },
+		  "errorId": {
+			"type": "string",
+			"format": "uuid"
+		  },
+		  "path": {
+			"type": "string"
+		  },
+		  "originalPath": {
+			"type": "string"
+		  },
+		  "message": {
+			"type": "string"
+		  },
+		  "errorCode": {
+			"type": "string"
+		  },
+		  "errorJson": {
+			"type": "string"
+		  }
+		}
+	  }
+	}
+  }
+}
+
+
