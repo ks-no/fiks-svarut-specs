@@ -191,10 +191,14 @@
                   "forsendelse": {
                     "$ref": "#/components/schemas/NhnForsendelse"
                   },
-                  "dokument": {
-                    "type": "string",
-                    "format": "binary",
-                    "description": "Vedlegg til forsendelsen. Multipart 'name' ignoreres, og trenger derfor ikke å være 'dokument'. 'filename' benyttes som filnavn. Maksimal størrelse er 18 MB."
+                  "dokumenter": {
+                    "type": "array",
+                    "description": "Forsendelsens dokumenter. Multipart 'name' ignoreres, og trenger derfor ikke å være 'dokumenter'. Må ha samme rekkefølge som dokument-metadata, dette valideres via filename på part. Total filstørrelse kan være maksimalt 18 MB.",
+                    "minItems": 1,
+                    "items": {
+                      "type": "string",
+                      "format": "binary"
+                    }
                   }
                 }
               }
