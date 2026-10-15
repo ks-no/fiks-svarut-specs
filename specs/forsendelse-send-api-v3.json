@@ -193,7 +193,7 @@
                   },
                   "dokumenter": {
                     "type": "array",
-                    "description": "Forsendelsens dokumenter. Multipart 'name' ignoreres, og trenger derfor ikke å være 'dokumenter'. Må ha samme rekkefølge som dokument-metadata, dette valideres via filename på part. Total filstørrelse kan være maksimalt 18 MB.",
+                    "description": "Forsendelsens dokumenter. Multipart 'name' ignoreres, og trenger derfor ikke å være 'dokumenter'. Filnavn hentes fra 'filename' på parten. Total filstørrelse kan være maksimalt 18 MB.",
                     "minItems": 1,
                     "items": {
                       "type": "string",
