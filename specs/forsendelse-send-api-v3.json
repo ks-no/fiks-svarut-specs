@@ -195,6 +195,7 @@
                     "type": "array",
                     "description": "Forsendelsens dokumenter. Multipart 'name' ignoreres, og trenger derfor ikke å være 'dokumenter'. Filnavn hentes fra 'filename' på parten. Total filstørrelse kan være maksimalt 18 MB.",
                     "minItems": 1,
+                    "maxItems": 100,
                     "items": {
                       "type": "string",
                       "format": "binary"
