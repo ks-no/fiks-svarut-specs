@@ -1,0 +1,147 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+	"title": "KS SvarUt: NHN API",
+	"description": "proxy API for  NHN tjenester",
+	"license": {
+	  "name": "MIT",
+	  "url": "https://opensource.org/licenses/MIT"
+	},
+	"contact": {
+	  "name": "Fiks-brukerstøtte",
+	  "url": "https://ks-no.github.io/",
+	  "email": "fiks@ksdigital.no"
+	},
+	"version": "v1"
+  },
+  "servers": [
+	{
+	  "url": "https://test.svarut.ks.no/api",
+	  "description": "SvarUt testmiljø"
+	},
+	{
+	  "url": "https://svarut.ks.no/api",
+	  "description": "SvarUt produksjonsmiljø"
+	}
+  ],
+  "security": [
+	{
+	  "bearerAuth": []
+	}
+  ],
+  "tags": [
+	{
+	  "name": "Nhn",
+	  "description": "API for oppslag i NHN adresseregister"
+	}
+  ],
+  "paths": {
+	"/v1/nhn/oppslag/{herId}": {
+	  "get": {
+		"tags": [
+		  "Nhn"
+		],
+		"summary": "Hent adresseregisteroppføring for HerId",
+		"description": "Henter en communication party fra NHN adresseregister basert på HerId",
+		"operationId": "adresseregisterOppslag",
+		"parameters": [
+		  {
+			"name": "herId",
+			"in": "path",
+			"required": true,
+			"description": "HerId som skal slås opp i NHN adresseregister",
+			"schema": {
+			  "type": "integer",
+			  "format": "int32",
+			  "minimum": 1
+			},
+			"example": 12345
+		  }
+		],
+		"responses": {
+		  "200": {
+			"description": "Communication party funnet for oppgitt HerId",
+			"content": {
+			  "application/json": {
+				"schema": {
+				  "$ref": "#/components/schemas/CommunicationParty"
+				}
+			  }
+			}
+		  },
+		  "404": {
+			"description": "Communication party finnes ikke for oppgitt HerId",
+			"content": {
+			  "application/json": {
+				"schema": {
+				  "$ref": "#/components/schemas/ErrorMessage"
+				}
+			  }
+			}
+		  },
+		  "default": {
+			"description": "Feil",
+			"content": {
+			  "application/json": {
+				"schema": {
+				  "$ref": "#/components/schemas/ErrorMessage"
+				}
+			  }
+			}
+		  }
+		}
+	  }
+	}
+  },
+  "components": {
+	"securitySchemes": {
+	  "bearerAuth": {
+		"type": "http",
+		"scheme": "bearer",
+		"bearerFormat": "JWT"
+	  }
+	},
+	"schemas": {
+	  "CommunicationParty": {
+		"$ref": "../../fiks-nhn-specs/specs/adresseregister-v1.json#/components/schemas/CommunicationParty"
+	  },
+	  "ErrorMessage": {
+		"type": "object",
+		"properties": {
+		  "timestamp": {
+			"type": "integer",
+			"format": "int64"
+		  },
+		  "status": {
+			"type": "integer",
+			"format": "int32"
+		  },
+		  "error": {
+			"type": "string"
+		  },
+		  "errorId": {
+			"type": "string",
+			"format": "uuid"
+		  },
+		  "path": {
+			"type": "string"
+		  },
+		  "originalPath": {
+			"type": "string"
+		  },
+		  "message": {
+			"type": "string"
+		  },
+		  "errorCode": {
+			"type": "string"
+		  },
+		  "errorJson": {
+			"type": "string"
+		  }
+		}
+	  }
+	}
+  }
+}
+
+
