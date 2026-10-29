@@ -36,20 +36,31 @@
 	}
   ],
   "paths": {
-	"/v1/nhn/oppslag/{herId}": {
+	"/v1/nhn/oppslag/{kontoId}/{herId}": {
 	  "get": {
 		"tags": [
 		  "Nhn"
 		],
-		"summary": "Hent adresseregisteroppføring for HerId",
-		"description": "Henter en communication party fra NHN adresseregister basert på HerId",
+		"summary": "Hent adresseregisteroppføring for HerId på konto",
+		"description": "Henter en communication party fra NHN adresseregister basert på et HER-id som kontoen er koblet til",
 		"operationId": "adresseregisterOppslag",
 		"parameters": [
+		  {
+			"name": "kontoId",
+			"in": "path",
+			"required": true,
+			"description": "KontoId som må være koblet til HER-id-et som skal slås opp",
+			"schema": {
+			  "type": "string",
+			  "format": "uuid"
+			},
+			"example": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+		  },
 		  {
 			"name": "herId",
 			"in": "path",
 			"required": true,
-			"description": "HerId som skal slås opp i NHN adresseregister",
+			"description": "HER-id som skal slås opp i NHN adresseregister. Må være konfiguert på kontoen.",
 			"schema": {
 			  "type": "integer",
 			  "format": "int32",
@@ -60,11 +71,21 @@
 		],
 		"responses": {
 		  "200": {
-			"description": "Communication party funnet for oppgitt HerId",
+			"description": "Communication party funnet for oppgitt HerId på kontoen",
 			"content": {
 			  "application/json": {
 				"schema": {
 				  "$ref": "#/components/schemas/CommunicationParty"
+				}
+			  }
+			}
+		  },
+		  "403": {
+			"description": "Kontoen har ikke konfiguert HER-id eller har ikke tilgang til oppgitt HerId",
+			"content": {
+			  "application/json": {
+				"schema": {
+				  "$ref": "#/components/schemas/ErrorMessage"
 				}
 			  }
 			}
@@ -143,5 +164,3 @@
 	}
   }
 }
-
-
