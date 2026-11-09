@@ -38,6 +38,7 @@
         "parameters" : [ {
           "name" : "organisasjonsnummer",
           "in" : "query",
+          "required": true,
           "schema" : {
             "pattern" : "^[0-9]{9}$",
             "type" : "string"
@@ -77,7 +78,7 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/ErrorMessage"
+                  "$ref": "https://developers.fiks.ks.no/api/fiks-common.json#/components/schemas/ErrorMessage"
                 }
               }
             }
@@ -133,41 +134,6 @@
             "items" : {
               "$ref" : "#/components/schemas/Mottakersystem"
             }
-          }
-        }
-      },
-      "ErrorMessage" : {
-        "type" : "object",
-        "properties" : {
-          "timestamp" : {
-            "type" : "integer",
-            "format" : "int64"
-          },
-          "status" : {
-            "type" : "integer",
-            "format" : "int32"
-          },
-          "error" : {
-            "type" : "string"
-          },
-          "errorId" : {
-            "type" : "string",
-            "format" : "uuid"
-          },
-          "path" : {
-            "type" : "string"
-          },
-          "originalPath" : {
-            "type" : "string"
-          },
-          "message" : {
-            "type" : "string"
-          },
-          "errorCode" : {
-            "type" : "string"
-          },
-          "errorJson" : {
-            "type" : "string"
           }
         }
       }
