@@ -124,7 +124,7 @@
 	},
 	"schemas": {
 	  "CommunicationParty": {
-		"$ref": "https://github.com/ks-no/fiks-nhn-specs/blob/main/specs/adresseregister-v1.json#/components/schemas/CommunicationParty"
+		"$ref": "https://raw.githubusercontent.com/ks-no/fiks-nhn-specs/main/specs/adresseregister-v1.json#/components/schemas/CommunicationParty"
 	  },
 	  "ErrorMessage": {
 		"type": "object",
