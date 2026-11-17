@@ -36,20 +36,20 @@
 	}
   ],
   "paths": {
-	"/v1/nhn/oppslag/{kontoId}/{herId}": {
+	"/v1/nhn/konto/{kontoId}/adresseregister/{herId}": {
 	  "get": {
 		"tags": [
 		  "Nhn"
 		],
-		"summary": "Hent adresseregisteroppføring for HerId på konto",
-		"description": "Henter en communication party fra NHN adresseregister basert på et HER-id som kontoen er koblet til",
+		"summary": "Hent adresseregisteroppføring for HER-id",
+		"description": "Henter en communication party fra NHN adresseregister for oppgitt HER-id. Kontoen må være koblet til NHN adresseregister med et konfigurert HER-id.",
 		"operationId": "adresseregisterOppslag",
 		"parameters": [
 		  {
 			"name": "kontoId",
 			"in": "path",
 			"required": true,
-			"description": "KontoId som må være koblet til HER-id-et som skal slås opp",
+			"description": "KontoId for kontoen det gjøres oppslag på vegne av. Kontoen må ha et konfigurert HER-id.",
 			"schema": {
 			  "type": "string",
 			  "format": "uuid"
@@ -60,7 +60,7 @@
 			"name": "herId",
 			"in": "path",
 			"required": true,
-			"description": "HER-id som skal slås opp i NHN adresseregister. Må være konfiguert på kontoen.",
+			"description": "HER-id som skal slås opp i NHN adresseregister.",
 			"schema": {
 			  "type": "integer",
 			  "format": "int32",
@@ -71,7 +71,7 @@
 		],
 		"responses": {
 		  "200": {
-			"description": "Communication party funnet for oppgitt HerId på kontoen",
+			"description": "Communication party funnet for oppgitt HER-id",
 			"content": {
 			  "application/json": {
 				"schema": {
@@ -81,7 +81,7 @@
 			}
 		  },
 		  "403": {
-			"description": "Kontoen har ikke konfiguert HER-id eller har ikke tilgang til oppgitt HerId",
+			"description": "Kontoen har ikke konfigurert HER-id, eller integrasjonen mangler tilgang til kontoen",
 			"content": {
 			  "application/json": {
 				"schema": {
@@ -91,7 +91,7 @@
 			}
 		  },
 		  "404": {
-			"description": "Communication party finnes ikke for oppgitt HerId",
+			"description": "Communication party finnes ikke for oppgitt HER-id",
 			"content": {
 			  "application/json": {
 				"schema": {
