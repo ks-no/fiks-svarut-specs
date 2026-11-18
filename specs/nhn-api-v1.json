@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
 	"title": "KS SvarUt: NHN API",
-	"description": "proxy API for  NHN tjenester",
+	"description": "Proxy API for NHN tjenester",
 	"license": {
 	  "name": "MIT",
 	  "url": "https://opensource.org/licenses/MIT"
@@ -32,24 +32,24 @@
   "tags": [
 	{
 	  "name": "Nhn",
-	  "description": "API for oppslag i NHN adresseregister"
+	  "description": "API for oppslag i NHN sine registre"
 	}
   ],
   "paths": {
-	"/v1/nhn/konto/{kontoId}/adresseregister/{herId}": {
+	"/v1/nhn/kontoer/{kontoId}/adresseregister/{herId}": {
 	  "get": {
 		"tags": [
 		  "Nhn"
 		],
 		"summary": "Hent adresseregisteroppføring for HER-id",
-		"description": "Henter en communication party fra NHN adresseregister for oppgitt HER-id. Kontoen må være koblet til NHN adresseregister med et konfigurert HER-id.",
+		"description": "Henter en communication party fra NHN adresseregister for oppgitt HER-id. Kontoen må være konfigurert med HER-id.",
 		"operationId": "adresseregisterOppslag",
 		"parameters": [
 		  {
 			"name": "kontoId",
 			"in": "path",
 			"required": true,
-			"description": "KontoId for kontoen det gjøres oppslag på vegne av. Kontoen må ha et konfigurert HER-id.",
+			"description": "KontoId for kontoen det gjøres oppslag på vegne av. Kontoen må være konfigurert med HER-id.",
 			"schema": {
 			  "type": "string",
 			  "format": "uuid"
@@ -85,7 +85,7 @@
 			"content": {
 			  "application/json": {
 				"schema": {
-				  "$ref": "#/components/schemas/ErrorMessage"
+					"$ref": "https://developers.fiks.ks.no/api/fiks-common.json#/components/schemas/ErrorMessage"
 				}
 			  }
 			}
@@ -95,7 +95,7 @@
 			"content": {
 			  "application/json": {
 				"schema": {
-				  "$ref": "#/components/schemas/ErrorMessage"
+					"$ref": "https://developers.fiks.ks.no/api/fiks-common.json#/components/schemas/ErrorMessage"
 				}
 			  }
 			}
@@ -105,7 +105,7 @@
 			"content": {
 			  "application/json": {
 				"schema": {
-				  "$ref": "#/components/schemas/ErrorMessage"
+					"$ref": "https://developers.fiks.ks.no/api/fiks-common.json#/components/schemas/ErrorMessage"
 				}
 			  }
 			}
@@ -124,42 +124,7 @@
 	},
 	"schemas": {
 	  "CommunicationParty": {
-		"$ref": "https://raw.githubusercontent.com/ks-no/fiks-nhn-specs/main/specs/adresseregister-v1.json#/components/schemas/CommunicationParty"
-	  },
-	  "ErrorMessage": {
-		"type": "object",
-		"properties": {
-		  "timestamp": {
-			"type": "integer",
-			"format": "int64"
-		  },
-		  "status": {
-			"type": "integer",
-			"format": "int32"
-		  },
-		  "error": {
-			"type": "string"
-		  },
-		  "errorId": {
-			"type": "string",
-			"format": "uuid"
-		  },
-		  "path": {
-			"type": "string"
-		  },
-		  "originalPath": {
-			"type": "string"
-		  },
-		  "message": {
-			"type": "string"
-		  },
-		  "errorCode": {
-			"type": "string"
-		  },
-		  "errorJson": {
-			"type": "string"
-		  }
-		}
+		"$ref": "https://raw.githubusercontent.com/ks-no/fiks-nhn-specs/d50978cea8de15f11f030ff0d60df25d00b4f4f4/specs/adresseregister-v1.json#/components/schemas/CommunicationParty"
 	  }
 	}
   }
