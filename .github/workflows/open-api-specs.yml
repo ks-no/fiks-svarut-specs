@@ -10,4 +10,6 @@ on:
 jobs:
   open-api-spec-ci:
     uses: ks-no/github-actions-public/.github/workflows/open-api-specs.yml@main
+    with:
+      is_public: true
     secrets: inherit
